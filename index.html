@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="ناشر — معاينة أولية لمنصة إعلانات مبوبة في الإمارات">
+  <title>ناشر | Nasher — Preview</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="config.js"></script><script defer src="app.js"></script>
+</head>
+<body>
+  <header><a class="brand" href="./"><strong>ناشر<span class="dot">.</span></strong><span>NASHER</span></a><div class="actions"><button id="language" type="button">English</button><button id="theme" type="button" data-i18n="theme">تبديل المظهر</button></div></header>
+  <main>
+    <div class="eyebrow" data-i18n="badge">الإمارات العربية المتحدة · معاينة التطوير</div>
+    <h1 data-i18n="heading">رقم مميز.<br>وبداية جديدة.</h1>
+    <p class="intro" data-i18n="intro">ناشر — مساحة بسيطة لعرض ما تود بيعه. نبدأ بلوحات أبوظبي، خطوة بخطوة.</p>
+    <div class="notice" data-i18n="notice">هذه معاينة للتصميم فقط. لا توجد إعلانات حقيقية، والتسجيل والنشر غير متاحين بعد.</div>
+    <section class="workspace" aria-labelledby="preview-title">
+      <div class="controls"><span class="eyebrow" data-i18n="phase">المرحلة الأولى / 01</span><h2 id="preview-title" data-i18n="previewTitle">لوحات أبوظبي</h2><p data-i18n="choose">استعرض التصميمين المعتمدين من الصور المرجعية.</p>
+        <fieldset><legend data-i18n="variant">تصميم اللوحة</legend><label class="choice"><input type="radio" name="variant" value="1" checked><span data-i18n="logo">شعار أبوظبي</span></label><label class="choice"><input type="radio" name="variant" value="2"><span data-i18n="red">الشريط الأحمر</span></label></fieldset>
+        <label class="select-label" for="example" data-i18n="example">المثال المرجعي</label><select id="example" dir="ltr"><option value="1">12 / 12345</option><option value="2">50 / 67890</option></select>
+        <p class="small" data-i18n="artNote">الصور المرجعية الأصلية معروضة دون تغيير الخط أو الألوان. توليد أرقام مخصصة سيأتي في المرحلة التالية.</p>
+      </div>
+      <div class="preview"><div class="preview-top"><span data-i18n="reference">معاينة مرجعية</span><span dir="ltr">ABU DHABI</span></div><div class="plate-frame"><img id="plate" src="assets/plates/variant1_ex1.png" alt="لوحة أبوظبي، الرمز 12، الرقم 12345"></div><div class="preview-bottom"><span data-i18n="private">لوحات سيارات خاصة</span><span data-i18n="notAd">مثال فقط — ليس إعلاناً</span></div></div>
+    </section>
+    <section class="facts" aria-label="Rules"><div><strong>1–50</strong><span data-i18n="codes">رموز أبوظبي المبدئية</span></div><div><strong>1–99999</strong><span data-i18n="numbers">أرقام اللوحات، دون أصفار بادئة</span></div><div><strong id="validity">30</strong><span data-i18n="validity">يوم صلاحية افتراضية</span></div><div><strong id="limit">10</strong><span data-i18n="limit">إعلانات نشطة لكل بائع</span></div></section>
+    <section class="connection"><div><h2 data-i18n="setup">فحص الإعداد</h2><p id="status" role="status" aria-live="polite" data-i18n="idle">يمكنك فحص اتصال قاعدة البيانات بعد تشغيل ملف SQL.</p></div><button id="check" class="primary" type="button" data-i18n="check">فحص الاتصال</button></section>
+  </main><footer><span>ناشر / Nasher</span><span data-i18n="footer">النسخة 0.1 · معاينة أبوظبي · الإمارات فقط</span></footer>
+</body></html>

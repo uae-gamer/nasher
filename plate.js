@@ -3,7 +3,7 @@
 (function(){let serial=0;const NS='http://www.w3.org/2000/svg';
 function node(tag,attrs={},text){const n=document.createElementNS(NS,tag);for(const [k,v]of Object.entries(attrs))n.setAttribute(k,String(v));if(text!==undefined)n.textContent=text;return n}
 const boxes=[[473,330,91,169],[587,330,102,169],[698,330,105,169],[807,330,106,169],[925,330,113,169]];
-function glyph(d,x,y,w,h,filter){const i='1234567890'.indexOf(d),box=boxes[i%5];const g=node('svg',{x,y,width:w,height:h,viewBox:box.join(' '),preserveAspectRatio:'none'});const im=node('image',{href:'assets/plates/variant1_ex'+(i<5?'1':'2')+'.png',width:1080,height:1080});if(filter)im.setAttribute('filter',filter);g.append(im);return g}
+function glyph(d,x,y,w,h,filter){const i='1234567890'.indexOf(d),box=d==='6'?[469,330,106,169]:boxes[i%5];const g=node('svg',{x,y,width:w,height:h,viewBox:box.join(' '),preserveAspectRatio:'none'});const im=node('image',{href:'assets/plates/variant1_ex'+(i<5?'1':'2')+'.png',width:1080,height:1080});if(filter)im.setAttribute('filter',filter);g.append(im);return g}
 // Dubai uses the supplied reference artwork via SVG viewports; source PNGs are unchanged.
 function dubai(target,code,number,variant){
  if(!/^([A-Z]|AA|BB|CC|DD|EE|FF|GG)$/.test(code)||!/^[1-9][0-9]{0,4}$/.test(number)||Number(variant)!==1){target.replaceChildren();return;}
@@ -20,14 +20,22 @@ function dubai(target,code,number,variant){
  const ref=letters[code[0]];
  if(ref){const [file,x,y,width,height]=ref,total=code.length*width;[...code].forEach((c,i)=>{const glyph=node('svg',{x:102-total/2+i*width,y:77,width,height,viewBox:[x,y,width,height].join(' ')});glyph.append(node('image',{href:'assets/plates/dubai-'+file+'.png',width:720,height:258}));svg.append(glyph)});target.replaceChildren(svg);return;}
 
- const label=node('text',{x:102,y:140,'text-anchor':'middle','font-family':'Arial, sans-serif','font-size':70,'font-weight':'600',fill:'#050505',stroke:'#a4a6a9','stroke-width':1,'paint-order':'stroke fill','textLength':code.length===1?45:90,'lengthAdjust':'spacingAndGlyphs'},code);svg.append(label);target.replaceChildren(svg);
+ // Layered SVG relief: recessed shadow, bright upper-left edge, metallic rim,
+ // and black face. Geometry remains a close font match for unprovided letters.
+ const attrs={x:102,y:140,'text-anchor':'middle','font-family':'Arial, sans-serif','font-size':82,'font-weight':'700','textLength':code.length===1?45:90,'lengthAdjust':'spacingAndGlyphs','stroke-linejoin':'round','paint-order':'stroke fill'};
+ const relief=node('g',{'aria-hidden':'true'});
+ relief.append(node('text',{...attrs,transform:'translate(2 2)',fill:'#7f8185',stroke:'#7f8185','stroke-width':4},code));
+ relief.append(node('text',{...attrs,transform:'translate(-1.5 -1.5)',fill:'#f8f8f6',stroke:'#f8f8f6','stroke-width':3},code));
+ relief.append(node('text',{...attrs,fill:'#050505',stroke:'#96989c','stroke-width':2},code));
+ relief.append(node('text',{...attrs,fill:'#050505'},code));
+ svg.append(relief);target.replaceChildren(svg);
 }
 window.NasherPlate={render(target,code,number,variant=1,emirate="abu_dhabi"){code=String(code);number=String(number);if(emirate==="dubai"){dubai(target,code,number,variant);return;}if(!/^[1-9][0-9]*$/.test(code)||code.length>10||!/^[1-9][0-9]{0,4}$/.test(number)||![1,2].includes(Number(variant))){target.replaceChildren();return}variant=Number(variant);const white='whiteCode'+(++serial),svg=node('svg',{viewBox:'0 0 1080 240',role:'img','aria-label':'Abu Dhabi '+code+' / '+number,class:'generated-plate'});svg.append(node('title',{},'Abu Dhabi — '+code+' / '+number));const defs=node('defs');const f=node('filter',{id:white,'color-interpolation-filters':'sRGB',x:'-2%',y:'-2%',width:'104%',height:'104%'});f.append(node('feColorMatrix',{type:'matrix',values:'0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1.1 -1.1 -1.1 0 2.8'}));defs.append(f);svg.append(defs);
 const base=node('svg',{viewBox:'0 298 1080 240',x:0,y:0,width:1080,height:240});base.append(node('image',{href:`assets/plates/variant${variant}_ex1.png`,width:1080,height:1080}));svg.append(base);
 svg.append(node('rect',{x:465,y:28,width:578,height:179,fill:'#d9dde6'}));
 const digitW=96,gap=16,total=number.length*digitW+(number.length-1)*gap,start=465+(578-total)/2;
 [...number].forEach((d,i)=>svg.append(glyph(d,start+i*(digitW+gap),34,digitW,164)));
-const red=variant===2;svg.append(node('rect',{x:red?28:30,y:29,width:red?153:139,height:red?176:100,fill:red?'#ca1a1c':'#d9dde6'}));const codeW=Math.min(red?55:50,(red?145:130)/code.length-5),codeH=red?115:80,cTotal=code.length*codeW+(code.length-1)*5,cStart=(red?104.5:99.5)-cTotal/2;
-[...code].forEach((d,i)=>svg.append(glyph(d,cStart+i*(codeW+5),red?62:34,codeW,codeH,red?'url(#'+white+')':null)));
+const red=variant===2;svg.append(node('rect',{x:red?28:30,y:29,width:red?153:139,height:red?176:100,fill:red?'#ca1a1c':'#d9dde6'}));const singleRed=red&&code.length===1;const codeW=Math.min(red?(singleRed?65:55):50,(red?145:130)/code.length-5),codeH=red?(singleRed?133:115):80,cTotal=code.length*codeW+(code.length-1)*5,cStart=(red?104.5:99.5)-cTotal/2;
+[...code].forEach((d,i)=>svg.append(glyph(d,cStart+i*(codeW+5),red?(singleRed?53:62):34,codeW,codeH,red?'url(#'+white+')':null)));
 target.replaceChildren(svg);
 }};})();

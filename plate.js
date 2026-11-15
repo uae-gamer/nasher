@@ -44,4 +44,46 @@ const digitW=96,gap=16,total=number.length*digitW+(number.length-1)*gap,start=46
 const red=variant===2;svg.append(node('rect',{x:red?28:30,y:29,width:red?153:139,height:red?176:100,fill:red?'#ca1a1c':'#d9dde6'}));const singleRed=red&&code.length===1;const codeW=Math.min(red?(singleRed?65:55):50,(red?145:130)/code.length-5),codeH=red?(singleRed?133:115):80,cTotal=code.length*codeW+(code.length-1)*5,cStart=(red?104.5:99.5)-cTotal/2;
 [...code].forEach((d,i)=>svg.append(glyph(d,cStart+i*(codeW+5),red?(singleRed?53:62):34,codeW,codeH,red?'url(#'+white+')':null)));
 target.replaceChildren(svg);
-}};})();
+}};
+// Build privately, embed every reference, then show only the finished PNG.
+// Source assets remain public web resources; this is presentation, not access control.
+const compose=window.NasherPlate.render,requests=new WeakMap(),assets=new Map();
+function embeddedAsset(href){
+ if(!assets.has(href)){
+  const pending=fetch(href).then(response=>{if(!response.ok)throw new Error('Plate asset unavailable');return response.blob()}).then(blob=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('Plate asset unreadable'));reader.readAsDataURL(blob)})).catch(error=>{assets.delete(href);throw error});
+  assets.set(href,pending);
+ }
+ return assets.get(href);
+}
+function decodeImage(source){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('Plate rendering failed'));img.src=source})}
+window.NasherPlate.render=function(target,code,number,variant=1,emirate='abu_dhabi'){
+ const request={},scratch=document.createElement('div');requests.set(target,request);
+ compose(scratch,code,number,variant,emirate);
+ const svg=scratch.firstElementChild;target.replaceChildren();
+ if(!svg){target.removeAttribute('aria-busy');return Promise.resolve()}
+ const label=svg.getAttribute('aria-label');
+ const width=emirate==='dubai'?720:1080,height=emirate==='dubai'?166:240;
+ const placeholder=document.createElement('div');placeholder.style.aspectRatio=width+'/'+height;placeholder.setAttribute('aria-label',label);target.append(placeholder);target.setAttribute('aria-busy','true');
+ return (async()=>{
+  try{
+   await Promise.all([...svg.querySelectorAll('image')].map(async image=>image.setAttribute('href',await embeddedAsset(image.getAttribute('href')))));
+   if(requests.get(target)!==request)return;
+   svg.setAttribute('width',width);svg.setAttribute('height',height);
+   const serialized=new XMLSerializer().serializeToString(svg);
+   const source='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(serialized);
+   const rendered=await decodeImage(source);
+   if(requests.get(target)!==request)return;
+   const canvas=document.createElement('canvas');canvas.width=width*2;canvas.height=height*2;
+   const context=canvas.getContext('2d');if(!context)throw new Error('Canvas unavailable');
+   context.fillStyle='#fff';context.fillRect(0,0,canvas.width,canvas.height);context.drawImage(rendered,0,0,canvas.width,canvas.height);
+   const output=await decodeImage(canvas.toDataURL('image/png'));
+   if(requests.get(target)!==request)return;
+   output.className='generated-plate';output.alt=label;output.width=canvas.width;output.height=canvas.height;
+   target.replaceChildren(output);
+  }catch(error){
+   if(requests.get(target)!==request)return;
+   const message=document.createElement('p');message.textContent=document.documentElement.lang==='ar'?'تعذر عرض رسم اللوحة. أعد تحميل الصفحة للمحاولة.':'Could not render the plate. Reload the page to retry.';message.setAttribute('role','status');target.replaceChildren(message);
+  }finally{if(requests.get(target)===request)target.removeAttribute('aria-busy')}
+ })();
+};
+})();

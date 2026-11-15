@@ -4,7 +4,7 @@ ar:{browse:'تصفح اللوحات',myAds:'إعلاناتي',account:'حساب�
 const E=id=>document.getElementById(id),T=k=>lex[lang][k]||k;
 function getStore(k,f){try{return localStorage.getItem(k)||f}catch{return f}}function putStore(k,v){try{localStorage.setItem(k,v)}catch{}}
 let lang=getStore('nasher.language','ar')==='en'?'en':'ar',db,user,admin=false,page=0,total=0,list=[],codes=[],settings=null,detail=null,edit=null,msg='',locked=false,contactData=null;
-const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,params=new URLSearchParams(location.search),adId=params.get('id'),size=12;
+const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,params=new URLSearchParams(location.search),adId=params.get('id'),size=15;
 const mine=!!E('mine-page');
 function text(tag,value,cls){const n=document.createElement(tag);n.textContent=value;if(cls)n.className=cls;return n}
 function note(key){msg=key;E('message').textContent=key?T(key):'';if(key==='signIn'){const a=text('a',' '+T('account'));a.href='account.html';E('message').append(a)}}

@@ -1,0 +1,37 @@
+/* Compact Nasher layout. Self-hosted UI fonts also apply on mobile browsers. */
+@font-face{font-family:NasherLatin;src:url('assets/fonts/NotoSans-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:NasherLatin;src:url('assets/fonts/NotoSans-Bold.ttf') format('truetype');font-weight:600 900;font-display:swap}
+@font-face{font-family:NasherArabic;src:url('assets/fonts/NotoSansArabic-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:NasherArabic;src:url('assets/fonts/NotoSansArabic-Bold.ttf') format('truetype');font-weight:600 900;font-display:swap}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-family:NasherLatin,NasherArabic,Arial,sans-serif;font-size:14px;line-height:1.55}
+html[lang=ar] body{font-family:NasherArabic,NasherLatin,Arial,sans-serif}
+button,input,select,textarea{font-family:inherit}
+header,main,footer{max-width:1400px;padding:16px 24px}
+header{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;justify-items:center;align-items:center}
+header>.brand{grid-row:2;justify-content:center;gap:10px}
+header>.brand strong{font-size:32px;line-height:1.25}
+header>.brand>span{display:block;font-size:10px;letter-spacing:2.4px}
+header>.actions{grid-row:1;justify-self:end;gap:6px}
+header>.actions button{font-size:12px;padding:5px 10px;min-height:32px;border-radius:7px}
+header>.market-nav{grid-row:3;display:flex;justify-content:center;gap:6px;flex-wrap:wrap;width:100%}
+header>.market-nav a{font-size:13px;padding:7px 11px;min-height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center}
+header>.market-nav a:hover{background:var(--soft)}
+header>.market-nav .post-link:hover{background:var(--accent)}
+main{padding-top:20px;padding-bottom:24px}
+h1,.market-top h1,.account-main h1{font-size:30px;letter-spacing:-.5px;line-height:1.4;margin:9px 0}
+h2{font-size:19px}.market-top p{margin:5px 0}.eyebrow{font-size:11px}.draft-note{font-size:12px;margin:7px 0}
+.filters{padding:12px;gap:10px;margin:14px 0 8px;border-radius:10px;grid-template-columns:repeat(4,minmax(0,1fr))}
+.filters label,.edit-grid label,.admin-grid label{font-size:12px;gap:4px}
+.filters input,.filters select,.edit-grid input:not([type=checkbox]),.edit-grid select,.admin-grid input:not([type=checkbox]),.admin-grid select{padding:7px 9px;min-height:36px;font-size:14px}
+.filters>.actions{align-self:end;gap:6px}.filters>.actions button{padding:7px 12px;font-size:13px;min-height:36px}
+.listing-grid,.account-main .listing-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.listing-card{border-radius:10px}.card-art{padding:15px 9px}.card-body{padding:11px}.card-body h2{font-size:14px;line-height:1.5;margin-bottom:4px;overflow-wrap:anywhere}.price{font-size:18px;margin:3px 0}.meta{font-size:11px;margin:6px 0 0}.tag{font-size:10px;padding:2px 7px}.tags{gap:4px}.card-actions{margin-top:8px;gap:5px}.card-actions button,.card-actions a{font-size:11px;padding:5px 7px;min-height:32px}
+.pager{margin:18px 0;gap:12px}.pager button{padding:6px 12px;min-height:36px}.status-message{padding:8px 12px;margin:8px 0}
+.edit-shell{gap:20px}.edit-grid{padding:18px;gap:12px}.live-preview{padding:20px}.live-preview .generated-plate{margin:24px 0}.live-preview h2{font-size:16px}.detail-art{padding:25px 18px}.detail-body{padding:16px 0}.detail-body h1{font-size:26px}.admin-grid{gap:16px}.admin-panel{padding:16px}.code-grid{gap:6px;margin:12px 0}.notice{padding:10px 14px;margin:14px 0;font-size:13px}
+.account-main{max-width:1400px}.account-card{max-width:760px;margin:14px auto;padding:20px;border-radius:12px}.account-main>.eyebrow{margin-top:12px}.account-card form{gap:10px}.account-card input:not([type=checkbox]){padding:9px;font-size:14px}.account-bar{flex-wrap:wrap}.account-main .account-card:has(#seller-ad-grid){max-width:none}
+footer{padding-top:14px;padding-bottom:18px;font-size:11px}
+@media(max-width:1099px){.listing-grid,.account-main .listing-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:849px){.listing-grid,.account-main .listing-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}header,main,footer{padding-inline:16px}}
+@media(max-width:599px){.listing-grid,.account-main .listing-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}header,main,footer{padding-inline:12px}header{gap:6px;padding-top:8px;padding-bottom:10px}header>.brand strong{font-size:29px}header>.market-nav{gap:3px}header>.market-nav a{font-size:12px;padding:6px 8px;min-height:38px}header>.actions button{min-height:36px}main{padding-top:14px}h1,.market-top h1,.account-main h1{font-size:25px}.filters{padding:10px;gap:9px}.filters input,.filters select,.edit-grid input:not([type=checkbox]),.edit-grid select,.admin-grid input:not([type=checkbox]),.admin-grid select,.account-card input:not([type=checkbox]){font-size:16px;min-height:42px}.card-art{padding:13px 6px}.card-body{padding:9px}.card-body h2{font-size:12px}.price{font-size:16px}.meta{font-size:10px}.card-actions button,.card-actions a{min-height:36px}.live-preview{padding:16px}.live-preview .generated-plate{margin:20px 0}.edit-grid,.account-card{padding:15px}.detail-art{padding:20px 10px}.detail-body h1{font-size:23px}}
+@media(max-width:359px){.listing-grid,.account-main .listing-grid{grid-template-columns:1fr}}

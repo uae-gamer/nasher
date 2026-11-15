@@ -16,18 +16,24 @@ function dubai(target,code,number,variant){
  [...number].forEach((d,i)=>{const even='24680',odd='13579',k=even.includes(d)?even.indexOf(d):odd.indexOf(d),g=node('svg',{x:start+i*57,y:26,width:49,height:113,viewBox:boxes[k].join(' '),preserveAspectRatio:'none'});g.append(node('image',{href:'assets/plates/dubai-'+(even.includes(d)?1:2)+'.png',width:720,height:258}));svg.append(g)});
  svg.append(node('rect',{x:43,y:78,width:119,height:69,fill:'#d9dde6'}));
  // Reference letter artwork where supplied; remaining letters use a close font match.
- const letters={A:[7,75,152,57,68],C:[1,75,152,57,68],D:[5,55,152,48,68],G:[6,48,152,55,68],I:[2,89,152,26,68],M:[3,73,152,58,68],W:[4,66,152,71,68]};
+ const letters={A:[7,75,152,57,68],C:[1,75,152,57,68],D:[5,54,152,50,70],G:[6,48,152,55,68],I:[2,89,152,26,68],M:[3,73,152,58,68],W:[4,66,152,71,68]};
  const ref=letters[code[0]];
- if(ref){const [file,x,y,width,height]=ref,total=code.length*width;[...code].forEach((c,i)=>{const glyph=node('svg',{x:102-total/2+i*width,y:77,width,height,viewBox:[x,y,width,height].join(' ')});glyph.append(node('image',{href:'assets/plates/dubai-'+file+'.png',width:720,height:258}));svg.append(glyph)});target.replaceChildren(svg);return;}
+ if(ref){const [file,x,y,width,height]=ref,total=code.length*width;[...code].forEach((c,i)=>{const glyph=node('svg',{x:102-total/2+i*width,y:77,width,height,viewBox:[x,y,width,height].join(' ')});glyph.append(node('image',{href:'assets/plates/dubai-'+file+'.png',width:720,height:file===5?262:258}));svg.append(glyph)});target.replaceChildren(svg);return;}
 
  // Layered SVG relief: recessed shadow, bright upper-left edge, metallic rim,
  // and black face. Geometry remains a close font match for unprovided letters.
  const attrs={x:102,y:140,'text-anchor':'middle','font-family':'Arial, sans-serif','font-size':82,'font-weight':'700','textLength':code.length===1?45:90,'lengthAdjust':'spacingAndGlyphs','stroke-linejoin':'round','paint-order':'stroke fill'};
- const relief=node('g',{'aria-hidden':'true'});
- relief.append(node('text',{...attrs,transform:'translate(2 2)',fill:'#7f8185',stroke:'#7f8185','stroke-width':4},code));
- relief.append(node('text',{...attrs,transform:'translate(-1.5 -1.5)',fill:'#f8f8f6',stroke:'#f8f8f6','stroke-width':3},code));
+ const effectId='dubaiRelief'+(++serial),defs=node('defs');
+ const softness=node('filter',{id:effectId,x:'-12%',y:'-12%',width:'124%',height:'124%','color-interpolation-filters':'sRGB'});
+ softness.append(node('feGaussianBlur',{stdDeviation:0.28}));defs.append(softness);
+ const face=node('linearGradient',{id:effectId+'Face',x1:'0%',y1:'0%',x2:'65%',y2:'100%'});
+ for(const [offset,color]of[['0%','#292a2b'],['18%','#101112'],['45%','#020202'],['80%','#080808'],['100%','#18191a']])face.append(node('stop',{offset,'stop-color':color}));
+ defs.append(face);svg.append(defs);
+ const relief=node('g',{'aria-hidden':'true',filter:'url(#'+effectId+')'});
+ relief.append(node('text',{...attrs,transform:'translate(1.7 1.8)',fill:'#85878a',stroke:'#85878a','stroke-width':3.5},code));
+ relief.append(node('text',{...attrs,transform:'translate(-1.15 -1.35)',fill:'#efefed',stroke:'#efefed','stroke-width':2.7},code));
  relief.append(node('text',{...attrs,fill:'#050505',stroke:'#96989c','stroke-width':2},code));
- relief.append(node('text',{...attrs,fill:'#050505'},code));
+ relief.append(node('text',{...attrs,fill:'url(#'+effectId+'Face)'},code));
  svg.append(relief);target.replaceChildren(svg);
 }
 window.NasherPlate={render(target,code,number,variant=1,emirate="abu_dhabi"){code=String(code);number=String(number);if(emirate==="dubai"){dubai(target,code,number,variant);return;}if(!/^[1-9][0-9]*$/.test(code)||code.length>10||!/^[1-9][0-9]{0,4}$/.test(number)||![1,2].includes(Number(variant))){target.replaceChildren();return}variant=Number(variant);const white='whiteCode'+(++serial),svg=node('svg',{viewBox:'0 0 1080 240',role:'img','aria-label':'Abu Dhabi '+code+' / '+number,class:'generated-plate'});svg.append(node('title',{},'Abu Dhabi — '+code+' / '+number));const defs=node('defs');const f=node('filter',{id:white,'color-interpolation-filters':'sRGB',x:'-2%',y:'-2%',width:'104%',height:'104%'});f.append(node('feColorMatrix',{type:'matrix',values:'0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1.1 -1.1 -1.1 0 2.8'}));defs.append(f);svg.append(defs);

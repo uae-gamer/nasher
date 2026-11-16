@@ -6,7 +6,7 @@ const boxes=[[473,330,91,169],[587,330,102,169],[698,330,105,169],[807,330,106,1
 function glyph(d,x,y,w,h,filter){const i='1234567890'.indexOf(d),box=d==='6'?[469,330,106,169]:boxes[i%5];const g=node('svg',{x,y,width:w,height:h,viewBox:box.join(' '),preserveAspectRatio:'none'});const im=node('image',{href:'assets/plates/variant1_ex'+(i<5?'1':'2')+'.png',width:1080,height:1080});if(filter)im.setAttribute('filter',filter);g.append(im);return g}
 // Dubai uses the supplied reference artwork via SVG viewports; source PNGs are unchanged.
 function dubai(target,code,number,variant){
- if(!/^([A-Z]|AA|BB|CC|DD|EE|FF|GG)$/.test(code)||!/^[1-9][0-9]{0,4}$/.test(number)||Number(variant)!==1){target.replaceChildren();return;}
+ if(!/^([A-Z])\1?$/.test(code)||!/^[1-9][0-9]{0,4}$/.test(number)||Number(variant)!==1){target.replaceChildren();return;}
  const svg=node('svg',{viewBox:'0 0 720 166',role:'img','aria-label':'Dubai '+code+' / '+number,class:'generated-plate'});
  svg.append(node('title',{},'Dubai — '+code+' / '+number));
  const base=node('svg',{x:0,y:0,width:720,height:166,viewBox:'0 75 720 166'});base.append(node('image',{href:'assets/plates/dubai-1.png',width:720,height:258}));svg.append(base);
@@ -18,18 +18,17 @@ function dubai(target,code,number,variant){
  // Reference letter artwork where supplied; remaining letters use a close font match.
  const letters={A:[7,75,152,57,68],C:[1,75,152,57,68],D:[5,54,152,50,70],G:[6,48,152,55,68],I:[2,89,152,26,68],M:[3,73,152,58,68],W:[4,66,152,71,68]};
  const ref=letters[code[0]];
- if(ref){const [file,x,y,width,height]=ref,total=code.length*width;[...code].forEach((c,i)=>{const glyph=node('svg',{x:102-total/2+i*width,y:77,width,height,viewBox:[x,y,width,height].join(' ')});glyph.append(node('image',{href:'assets/plates/dubai-'+file+'.png',width:720,height:file===5?262:258}));svg.append(glyph)});target.replaceChildren(svg);return;}
+ if(ref){const [file,x,y,width,height]=ref,displayWidth=Math.min(width,116/code.length),total=code.length*displayWidth;[...code].forEach((c,i)=>{const glyph=node('svg',{x:102-total/2+i*displayWidth,y:77,width:displayWidth,height,viewBox:[x,y,width,height].join(' '),preserveAspectRatio:'none'});glyph.append(node('image',{href:'assets/plates/dubai-'+file+'.png',width:720,height:file===5?262:258}));svg.append(glyph)});target.replaceChildren(svg);return;}
 
  // Layered SVG relief: recessed shadow, bright upper-left edge, metallic rim,
- // and black face. Geometry remains a close font match for unprovided letters.
- const attrs={x:102,y:140,'text-anchor':'middle','font-family':'Arial, sans-serif','font-size':82,'font-weight':'700','textLength':code.length===1?45:90,'lengthAdjust':'spacingAndGlyphs','stroke-linejoin':'round','paint-order':'stroke fill'};
+ // and black face. Keep edges sharp: no Gaussian blur over the letter faces.
+ // Geometry remains a close font match for unprovided letters.
+ const attrs={x:102,y:code[0]==='Q'?135:140,'text-anchor':'middle','font-family':'Arial, sans-serif','font-size':code[0]==='Q'?74:82,'font-weight':'700','textLength':code.length===1?45:90,'lengthAdjust':'spacingAndGlyphs','stroke-linejoin':'round','paint-order':'stroke fill'};
  const effectId='dubaiRelief'+(++serial),defs=node('defs');
- const softness=node('filter',{id:effectId,x:'-12%',y:'-12%',width:'124%',height:'124%','color-interpolation-filters':'sRGB'});
- softness.append(node('feGaussianBlur',{stdDeviation:0.28}));defs.append(softness);
  const face=node('linearGradient',{id:effectId+'Face',x1:'0%',y1:'0%',x2:'65%',y2:'100%'});
  for(const [offset,color]of[['0%','#292a2b'],['18%','#101112'],['45%','#020202'],['80%','#080808'],['100%','#18191a']])face.append(node('stop',{offset,'stop-color':color}));
  defs.append(face);svg.append(defs);
- const relief=node('g',{'aria-hidden':'true',filter:'url(#'+effectId+')'});
+ const relief=node('g',{'aria-hidden':'true'});
  relief.append(node('text',{...attrs,transform:'translate(1.7 1.8)',fill:'#85878a',stroke:'#85878a','stroke-width':3.5},code));
  relief.append(node('text',{...attrs,transform:'translate(-1.15 -1.35)',fill:'#efefed',stroke:'#efefed','stroke-width':2.7},code));
  relief.append(node('text',{...attrs,fill:'#050505',stroke:'#96989c','stroke-width':2},code));
@@ -38,7 +37,7 @@ function dubai(target,code,number,variant){
 }
 // Sharjah: original artwork, one layout, blank code area for the none sentinel.
 function sharjah(target,code,number,variant){
- if(!['none','1','2','3','4'].includes(code)||!/^[1-9][0-9]{0,4}$/.test(number)||Number(variant)!==1){target.replaceChildren();return;}
+ if(!['none','1','2','3','4','5','6','7','8','9'].includes(code)||!/^[1-9][0-9]{0,4}$/.test(number)||Number(variant)!==1){target.replaceChildren();return;}
  const label='Sharjah '+(code==='none'?'No code':code)+' / '+number,svg=node('svg',{viewBox:'0 0 720 164',role:'img','aria-label':label,class:'generated-plate'});
  svg.append(node('title',{},label));
  const base=node('svg',{x:0,y:0,width:720,height:164,viewBox:'0 195 720 164'});base.append(node('image',{href:'assets/plates/sharjah-1.png',width:720,height:720}));svg.append(base);

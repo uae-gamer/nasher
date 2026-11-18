@@ -15,10 +15,14 @@ function dubai(target,code,number,variant){
  const total=number.length*49+(number.length-1)*8,start=462-total/2;
  [...number].forEach((d,i)=>{const even='24680',odd='13579',k=even.includes(d)?even.indexOf(d):odd.indexOf(d),g=node('svg',{x:start+i*57,y:26,width:49,height:113,viewBox:boxes[k].join(' '),preserveAspectRatio:'none'});g.append(node('image',{href:'assets/plates/dubai-'+(even.includes(d)?1:2)+'.png',width:720,height:258}));svg.append(g)});
  svg.append(node('rect',{x:43,y:78,width:119,height:69,fill:'#d9dde6'}));
+ drawDubaiCode(svg,code);
+ target.replaceChildren(svg);
+}
+function drawDubaiCode(svg,code){
  // Reference letter artwork where supplied; remaining letters use a close font match.
  const letters={A:[7,75,152,57,68],C:[1,75,152,57,68],D:[5,54,152,50,70],G:[6,48,152,55,68],I:[2,89,152,26,68],M:[3,73,152,58,68],W:[4,66,152,71,68]};
  const ref=letters[code[0]];
- if(ref){const [file,x,y,width,height]=ref,displayWidth=Math.min(width,116/code.length),total=code.length*displayWidth;[...code].forEach((c,i)=>{const glyph=node('svg',{x:102-total/2+i*displayWidth,y:77,width:displayWidth,height,viewBox:[x,y,width,height].join(' '),preserveAspectRatio:'none'});glyph.append(node('image',{href:'assets/plates/dubai-'+file+'.png',width:720,height:file===5?262:258}));svg.append(glyph)});target.replaceChildren(svg);return;}
+ if(ref){const [file,x,y,width,height]=ref,displayWidth=Math.min(width,116/code.length),total=code.length*displayWidth;[...code].forEach((c,i)=>{const glyph=node('svg',{x:102-total/2+i*displayWidth,y:77,width:displayWidth,height,viewBox:[x,y,width,height].join(' '),preserveAspectRatio:'none'});glyph.append(node('image',{href:'assets/plates/dubai-'+file+'.png',width:720,height:file===5?262:258}));svg.append(glyph)});return;}
 
  // Layered SVG relief: recessed shadow, bright upper-left edge, metallic rim,
  // and black face. Keep edges sharp: no Gaussian blur over the letter faces.
@@ -33,7 +37,7 @@ function dubai(target,code,number,variant){
  relief.append(node('text',{...attrs,transform:'translate(-1.15 -1.35)',fill:'#efefed',stroke:'#efefed','stroke-width':2.7},code));
  relief.append(node('text',{...attrs,fill:'#050505',stroke:'#96989c','stroke-width':2},code));
  relief.append(node('text',{...attrs,fill:'url(#'+effectId+'Face)'},code));
- svg.append(relief);target.replaceChildren(svg);
+ svg.append(relief);
 }
 // Sharjah: original artwork, one layout, blank code area for the none sentinel.
 function sharjah(target,code,number,variant){
@@ -49,7 +53,45 @@ function sharjah(target,code,number,variant){
  if(code!=='none')svg.append(digit(code,101,51,34,66));
  target.replaceChildren(svg);
 }
-window.NasherPlate={render(target,code,number,variant=1,emirate="abu_dhabi"){code=String(code);number=String(number);if(emirate==="sharjah"){sharjah(target,code,number,variant);return;}if(emirate==="dubai"){dubai(target,code,number,variant);return;}if(!/^[1-9][0-9]*$/.test(code)||code.length>10||!/^[1-9][0-9]{0,4}$/.test(number)||![1,2].includes(Number(variant))){target.replaceChildren();return}variant=Number(variant);const white='whiteCode'+(++serial),svg=node('svg',{viewBox:'0 0 1080 240',role:'img','aria-label':'Abu Dhabi '+code+' / '+number,class:'generated-plate'});svg.append(node('title',{},'Abu Dhabi — '+code+' / '+number));const defs=node('defs');const f=node('filter',{id:white,'color-interpolation-filters':'sRGB',x:'-2%',y:'-2%',width:'104%',height:'104%'});f.append(node('feColorMatrix',{type:'matrix',values:'0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1.1 -1.1 -1.1 0 2.8'}));defs.append(f);svg.append(defs);
+// Only the upper horizontal plate is sampled from each reference.
+function fujairah(target, code, number, variant) {
+ if (!/^[A-Z]$/.test(code) || !/^[1-9][0-9]{0,4}$/.test(number) || ![1,2].includes(Number(variant))) {
+  target.replaceChildren(); return;
+ }
+ const svg = node('svg', {viewBox:'0 0 1080 250',role:'img','aria-label':'Fujairah '+code+' / '+number,class:'generated-plate'});
+ function sample(file, source, x, y) {
+  const [left,top,width,height] = source;
+  const id = 'fujCrop'+(++serial);
+  const clip = node('clipPath',{id});
+  clip.append(node('rect',{x,y,width,height}));
+  const defs = node('defs');
+  defs.append(clip);
+  svg.append(defs,node('image',{x:x-left,y:y-top,width:1080,height:250,
+   href:'assets/plates/FUJ-'+file+'.png','clip-path':'url(#'+id+')'}));
+ }
+ sample(Number(variant)===1?'BLK-1':'RED-1',[0,0,1080,250],0,0);
+ const fill='#d9dde6';
+ svg.append(node('rect',{x:70,y:40,width:115,height:158,fill}),node('rect',{x:520,y:40,width:490,height:166,fill}));
+ const letters={A:'RED-1',B:'RED-2',C:'RED-3',D:'BLK-1',E:'BLK-2',G:'BLK-3'};
+ if (letters[code]) sample(letters[code],[92,60,72,123],92,60);
+ else {
+  const letter=node('g',{transform:'translate(127 122) scale(1.2 1.6) translate(-102 -109)'});
+  const id='fujLetter'+(++serial), defs=node('defs'), clip=node('clipPath',{id});
+  clip.append(node('rect',{x:64,y:75,width:76,height:74}));
+  defs.append(clip);svg.append(defs);
+  letter.setAttribute('clip-path','url(#'+id+')');
+  drawDubaiCode(letter,code);
+  svg.append(letter);
+ }
+ const slotWidth=77.5, start=753-number.length*slotWidth/2;
+ Array.from(number).forEach((digit,index)=>{
+  const position='1234567890'.indexOf(digit);
+  const left=Math.round(559+(position%5)*slotWidth);
+  sample(position<5?'RED-1':'RED-2',[left,47,77,154],Math.round(start+index*slotWidth),47);
+ });
+ target.replaceChildren(svg);
+}
+window.NasherPlate={render(target,code,number,variant=1,emirate="abu_dhabi"){code=String(code);number=String(number);if(emirate==="fujairah"){fujairah(target,code,number,variant);return;}if(emirate==="sharjah"){sharjah(target,code,number,variant);return;}if(emirate==="dubai"){dubai(target,code,number,variant);return;}if(!/^[1-9][0-9]*$/.test(code)||code.length>10||!/^[1-9][0-9]{0,4}$/.test(number)||![1,2].includes(Number(variant))){target.replaceChildren();return}variant=Number(variant);const white='whiteCode'+(++serial),svg=node('svg',{viewBox:'0 0 1080 240',role:'img','aria-label':'Abu Dhabi '+code+' / '+number,class:'generated-plate'});svg.append(node('title',{},'Abu Dhabi — '+code+' / '+number));const defs=node('defs');const f=node('filter',{id:white,'color-interpolation-filters':'sRGB',x:'-2%',y:'-2%',width:'104%',height:'104%'});f.append(node('feColorMatrix',{type:'matrix',values:'0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1.1 -1.1 -1.1 0 2.8'}));defs.append(f);svg.append(defs);
 const base=node('svg',{viewBox:'0 298 1080 240',x:0,y:0,width:1080,height:240});base.append(node('image',{href:`assets/plates/variant${variant}_ex1.png`,width:1080,height:1080}));svg.append(base);
 svg.append(node('rect',{x:465,y:28,width:578,height:179,fill:'#d9dde6'}));
 const digitW=96,gap=16,total=number.length*digitW+(number.length-1)*gap,start=465+(578-total)/2;
@@ -75,7 +117,7 @@ window.NasherPlate.render=function(target,code,number,variant=1,emirate='abu_dha
  const svg=scratch.firstElementChild;target.replaceChildren();
  if(!svg){target.removeAttribute('aria-busy');return Promise.resolve()}
  const label=svg.getAttribute('aria-label');
- const width=emirate==='abu_dhabi'?1080:720,height=emirate==='sharjah'?164:emirate==='dubai'?166:240;
+ const width=['abu_dhabi','fujairah'].includes(emirate)?1080:720,height=emirate==='fujairah'?250:emirate==='sharjah'?164:emirate==='dubai'?166:240;
  const placeholder=document.createElement('div');placeholder.style.aspectRatio=width+'/'+height;placeholder.setAttribute('aria-label',label);target.append(placeholder);target.setAttribute('aria-busy','true');
  return (async()=>{
   try{

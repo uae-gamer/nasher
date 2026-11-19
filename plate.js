@@ -92,13 +92,17 @@ function fujairah(target, code, number, variant) {
  target.replaceChildren(svg);
 }
 // Sprite regions retain the lettering, highlights and shadows of the long plates.
-function ummAlQuwain(target, code, number, variant) {
- if (!/^[A-Z]$/.test(code) || !/^[1-9][0-9]{0,4}$/.test(number) || ![1,2].includes(Number(variant))) {
+const longPlateStyles = {
+ umm_al_quwain: {name:'Umm Al Quwain',asset:'uaq-long',letters:'ABCD',tileWidth:105,letterX:77,center:131,digitsX:510,variants:[1,2]},
+ ras_al_khaimah: {name:'Ras Al Khaimah',asset:'rak-long',letters:'ABCDIKVXY',tileWidth:118,letterX:302,center:361,digitsX:470,variants:[1]}
+};
+function atlasPlate(target, code, number, variant, style) {
+ if (!/^[A-Z]$/.test(code) || !/^[1-9][0-9]{0,4}$/.test(number) || !style.variants.includes(Number(variant))) {
   target.replaceChildren(); return;
  }
- const svg=node('svg',{viewBox:'0 0 1080 250',role:'img','aria-label':'Umm Al Quwain '+code+' / '+number,class:'generated-plate'});
+ const svg=node('svg',{viewBox:'0 0 1080 250',role:'img','aria-label':style.name+' '+code+' / '+number,class:'generated-plate'});
  const defs=node('defs'), atlasId='uaqAtlas'+(++serial);
- defs.append(node('image',{id:atlasId,href:'assets/plates/uaq-long.png',width:1080,height:620}));
+ defs.append(node('image',{id:atlasId,href:'assets/plates/'+style.asset+'.png',width:1080,height:620}));
  svg.append(defs);
  function region(left,top,width,height,x,y) {
   const id='uaqCrop'+(++serial), clip=node('clipPath',{id});
@@ -110,10 +114,10 @@ function ummAlQuwain(target, code, number, variant) {
  }
  region(0,0,1080,250,0,0);
  if (Number(variant)===2) region(520,250,154,126,272,60);
- const index='ABCD'.indexOf(code);
- if (index>=0) region(index*105,250,105,182,77,30);
+ const index=style.letters.indexOf(code);
+ if (index>=0) region(index*style.tileWidth,250,style.tileWidth,182,style.letterX,30);
  else {
-  const letter=node('g',{transform:'translate(131 122) scale(1.60 2.42) translate(-102 -109)'});
+  const letter=node('g',{transform:'translate('+style.center+' 122) scale(1.60 2.42) translate(-102 -109)'});
   const id='uaqLetter'+(++serial), clip=node('clipPath',{id});
   const refWidth={G:55,I:26,M:58,W:71}[code];
   clip.append(node('rect',refWidth ? {x:102-refWidth/2,y:77,width:refWidth,height:68} : {x:64,y:75,width:76,height:74}));
@@ -122,11 +126,11 @@ function ummAlQuwain(target, code, number, variant) {
   drawDubaiCode(letter,code);
   svg.append(letter);
  }
- const start=510+(5-number.length)*85/2;
+ const start=style.digitsX+(5-number.length)*85/2;
  Array.from(number).forEach((digit,i)=>region('1234567890'.indexOf(digit)*85,435,85,182,start+i*85,30));
  target.replaceChildren(svg);
 }
-window.NasherPlate={render(target,code,number,variant=1,emirate="abu_dhabi"){code=String(code);number=String(number);if(emirate==="umm_al_quwain"){ummAlQuwain(target,code,number,variant);return;}if(emirate==="fujairah"){fujairah(target,code,number,variant);return;}if(emirate==="sharjah"){sharjah(target,code,number,variant);return;}if(emirate==="dubai"){dubai(target,code,number,variant);return;}if(!/^[1-9][0-9]*$/.test(code)||code.length>10||!/^[1-9][0-9]{0,4}$/.test(number)||![1,2].includes(Number(variant))){target.replaceChildren();return}variant=Number(variant);const white='whiteCode'+(++serial),svg=node('svg',{viewBox:'0 0 1080 240',role:'img','aria-label':'Abu Dhabi '+code+' / '+number,class:'generated-plate'});svg.append(node('title',{},'Abu Dhabi — '+code+' / '+number));const defs=node('defs');const f=node('filter',{id:white,'color-interpolation-filters':'sRGB',x:'-2%',y:'-2%',width:'104%',height:'104%'});f.append(node('feColorMatrix',{type:'matrix',values:'0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1.1 -1.1 -1.1 0 2.8'}));defs.append(f);svg.append(defs);
+window.NasherPlate={render(target,code,number,variant=1,emirate="abu_dhabi"){code=String(code);number=String(number);if(Object.hasOwn(longPlateStyles,emirate)){atlasPlate(target,code,number,variant,longPlateStyles[emirate]);return;}if(emirate==="fujairah"){fujairah(target,code,number,variant);return;}if(emirate==="sharjah"){sharjah(target,code,number,variant);return;}if(emirate==="dubai"){dubai(target,code,number,variant);return;}if(!/^[1-9][0-9]*$/.test(code)||code.length>10||!/^[1-9][0-9]{0,4}$/.test(number)||![1,2].includes(Number(variant))){target.replaceChildren();return}variant=Number(variant);const white='whiteCode'+(++serial),svg=node('svg',{viewBox:'0 0 1080 240',role:'img','aria-label':'Abu Dhabi '+code+' / '+number,class:'generated-plate'});svg.append(node('title',{},'Abu Dhabi — '+code+' / '+number));const defs=node('defs');const f=node('filter',{id:white,'color-interpolation-filters':'sRGB',x:'-2%',y:'-2%',width:'104%',height:'104%'});f.append(node('feColorMatrix',{type:'matrix',values:'0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1.1 -1.1 -1.1 0 2.8'}));defs.append(f);svg.append(defs);
 const base=node('svg',{viewBox:'0 298 1080 240',x:0,y:0,width:1080,height:240});base.append(node('image',{href:`assets/plates/variant${variant}_ex1.png`,width:1080,height:1080}));svg.append(base);
 svg.append(node('rect',{x:465,y:28,width:578,height:179,fill:'#d9dde6'}));
 const digitW=96,gap=16,total=number.length*digitW+(number.length-1)*gap,start=465+(578-total)/2;
@@ -152,7 +156,7 @@ window.NasherPlate.render=function(target,code,number,variant=1,emirate='abu_dha
  const svg=scratch.firstElementChild;target.replaceChildren();
  if(!svg){target.removeAttribute('aria-busy');return Promise.resolve()}
  const label=svg.getAttribute('aria-label');
- const width=['abu_dhabi','fujairah','umm_al_quwain'].includes(emirate)?1080:720,height=['umm_al_quwain','fujairah'].includes(emirate)?250:emirate==='sharjah'?164:emirate==='dubai'?166:240;
+ const width=['abu_dhabi','fujairah','umm_al_quwain','ras_al_khaimah'].includes(emirate)?1080:720,height=['umm_al_quwain','fujairah','ras_al_khaimah'].includes(emirate)?250:emirate==='sharjah'?164:emirate==='dubai'?166:240;
  const placeholder=document.createElement('div');placeholder.style.aspectRatio=width+'/'+height;placeholder.setAttribute('aria-label',label);target.append(placeholder);target.setAttribute('aria-busy','true');
  return (async()=>{
   try{

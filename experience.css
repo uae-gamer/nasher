@@ -1,0 +1,9 @@
+#draft-panel {display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-block:1rem}
+#draft-panel[hidden] {display:none}
+#draft-status {margin:0}
+#diagnostic-content {overflow-x:auto}
+#diagnostic-content table {border-collapse:collapse;width:100%;margin-block:1rem}
+#diagnostic-content th,#diagnostic-content td {padding:.55rem;text-align:start;border-bottom:1px solid #88998f55;white-space:nowrap}
+#diagnostic-errors p {font-size:.85rem;overflow-wrap:anywhere;direction:ltr;text-align:start}
+#admin-page>section.admin-panel {margin-block-end:1rem}
+#admin-page details {margin-block-start:1rem}

@@ -1,7 +1,7 @@
 'use strict';
 window.NasherExperience = (() => {
  const get = id => document.getElementById(id);
- const browseFields = ['filter-emirate','filter-code','filter-number','filter-digits','filter-min','filter-max','filter-sort'];
+ const browseFields = ['filter-status','filter-emirate','filter-code','filter-number','filter-digits','filter-min','filter-max','filter-sort'];
  const draftFields = ['ad-emirate','ad-code','ad-number','ad-variant','ad-price','ad-por','ad-negotiable','ad-whatsapp','seller-id'];
  const browseKey = 'nasher.browse.v1';
  let context, appliedBrowse = null, pendingScroll = null, draftKey = null;
@@ -62,7 +62,7 @@ window.NasherExperience = (() => {
   if(!saved || saved.version!==1 || !saved.fields)return 0;
   setValue('filter-emirate',saved.fields['filter-emirate']);
   context.setupCodes();
-  for(const id of browseFields.slice(1))setValue(id,saved.fields[id]);
+  for(const id of browseFields.filter(id=>id!=='filter-emirate')){if(id in saved.fields)setValue(id,saved.fields[id]);}
   pendingScroll=Number.isFinite(saved.scroll)?Math.max(0,saved.scroll):0;
   return Number.isInteger(saved.page)?Math.max(0,Math.min(saved.page,100000)):0;
  }
@@ -149,7 +149,7 @@ window.NasherExperience = (() => {
  function recordError(error) {
   // Store only bounded codes and known filenames, never raw error messages or URLs.
   const page=location.pathname.split('/').pop()||'index.html';
-  if(!['index.html','post.html','ad.html','my-ads.html','admin.html'].includes(page))return;
+  if(!['index.html','post.html','ad.html','my-ads.html','admin.html','bulk.html'].includes(page))return;
   const code=String(error?.message||'').match(/NASHER_[A-Z_]+/)?.[0] ||
    (/^[A-Z0-9]{2,12}$/.test(String(error?.code||''))?String(error.code):'REQUEST_FAILED');
   try {

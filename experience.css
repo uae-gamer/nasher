@@ -7,3 +7,17 @@
 #diagnostic-errors p {font-size:.85rem;overflow-wrap:anywhere;direction:ltr;text-align:start}
 #admin-page>section.admin-panel {margin-block-end:1rem}
 #admin-page details {margin-block-start:1rem}
+.sold-tag {background:#574252;color:#fff;font-weight:700}
+.last-asking {display:block;font-size:.8rem;font-weight:400}
+.price del {display:block;font-size:.85rem;font-weight:400;opacity:.7}
+.price .discount {margin-inline-end:.5rem}
+.price>span:last-child {display:block}
+.price:empty {display:none}
+.bulk-row {margin-block:1rem;padding:1rem;border:1px solid #88998f55;border-radius:12px}
+.bulk-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.bulk-grid label {display:flex;flex-direction:column;gap:.4rem}
+.bulk-grid .choice {flex-direction:row;align-items:center}
+.bulk-grid input,.bulk-grid select {max-width:100%;min-width:0}
+.bulk-preview {max-width:540px;background:#fff;margin-block:1rem}
+#bulk-controls {border:0;padding:0;min-width:0}
+@media(max-width:650px){.bulk-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}

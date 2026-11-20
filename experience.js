@@ -182,7 +182,7 @@ window.NasherExperience = (() => {
   const errors=get('diagnostic-errors');errors.replaceChildren();
   const stored=read(localStorage,'nasher.errors.v1'),rows=Array.isArray(stored)?stored:[];
   if(!rows.length)errors.append(element('p',label('noErrors')));
-  for(const row of rows.slice(-20).reverse())errors.append(element('p',row.at+' · '+row.page+' · '+row.code));
+  for(const row of rows.slice(-20).reverse())errors.append(element('p',row.at+' · '+row.page+' · '+row.code+' · REF '+row.at.replace(/[^0-9]/g,'').slice(0,17)));
  }
  async function loadDiagnostics() {
   if(!context.isAdmin()||diagnosticsBusy)return;

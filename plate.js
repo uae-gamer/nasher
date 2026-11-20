@@ -141,7 +141,8 @@ target.replaceChildren(svg);
 }};
 // Build privately, embed every reference, then show only the finished PNG.
 // Source assets remain public web resources; this is presentation, not access control.
-const compose=window.NasherPlate.render,requests=new WeakMap(),assets=new Map();
+const compose=window.NasherPlate.render,requests=new WeakMap(),assets=new Map(),finished=new Map();let cacheBytes=0;
+function remember(key,src){if(src.length>1600000)return;if(finished.has(key))cacheBytes-=finished.get(key).length;finished.delete(key);finished.set(key,src);cacheBytes+=src.length;while(cacheBytes>12000000||finished.size>40){const first=finished.keys().next().value;cacheBytes-=finished.get(first).length;finished.delete(first)}}
 function embeddedAsset(href){
  if(!assets.has(href)){
   const pending=fetch(href).then(response=>{if(!response.ok)throw new Error('Plate asset unavailable');return response.blob()}).then(blob=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('Plate asset unreadable'));reader.readAsDataURL(blob)})).catch(error=>{assets.delete(href);throw error});
@@ -151,12 +152,13 @@ function embeddedAsset(href){
 }
 function decodeImage(source){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('Plate rendering failed'));img.src=source})}
 window.NasherPlate.render=function(target,code,number,variant=1,emirate='abu_dhabi'){
- const request={},scratch=document.createElement('div');requests.set(target,request);
+ const key=JSON.stringify([emirate,String(code),String(number),Number(variant)]);const request={},scratch=document.createElement('div');requests.set(target,request);
  compose(scratch,code,number,variant,emirate);
  const svg=scratch.firstElementChild;target.replaceChildren();
  if(!svg){target.removeAttribute('aria-busy');return Promise.resolve()}
  const label=svg.getAttribute('aria-label');
  const width=['abu_dhabi','fujairah','umm_al_quwain','ras_al_khaimah'].includes(emirate)?1080:720,height=['umm_al_quwain','fujairah','ras_al_khaimah'].includes(emirate)?250:emirate==='sharjah'?164:emirate==='dubai'?166:240;
+ if(finished.has(key)){const output=new Image();output.src=finished.get(key);output.className='generated-plate';output.alt=label;output.width=width*2;output.height=height*2;target.replaceChildren(output);target.removeAttribute('aria-busy');return Promise.resolve();}
  const placeholder=document.createElement('div');placeholder.style.aspectRatio=width+'/'+height;placeholder.setAttribute('aria-label',label);target.append(placeholder);target.setAttribute('aria-busy','true');
  return (async()=>{
   try{
@@ -173,11 +175,19 @@ window.NasherPlate.render=function(target,code,number,variant=1,emirate='abu_dha
    const output=await decodeImage(canvas.toDataURL('image/png'));
    if(requests.get(target)!==request)return;
    output.className='generated-plate';output.alt=label;output.width=canvas.width;output.height=canvas.height;
-   target.replaceChildren(output);
+   remember(key,output.src);target.replaceChildren(output);
   }catch(error){
    if(requests.get(target)!==request)return;
    const message=document.createElement('p');message.textContent=document.documentElement.lang==='ar'?'تعذر عرض رسم اللوحة. أعد تحميل الصفحة للمحاولة.':'Could not render the plate. Reload the page to retry.';message.setAttribute('role','status');target.replaceChildren(message);
   }finally{if(requests.get(target)===request)target.removeAttribute('aria-busy')}
- })();
+ // Defer only listing artwork outside the initial viewport. Preview and detail stay immediate.
+const immediate=window.NasherPlate.render,pending=new WeakMap(),observed=new Set();
+const observer=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){observer.unobserve(e.target);observed.delete(e.target);const args=pending.get(e.target);pending.delete(e.target);if(args)immediate(e.target,...args);}},{rootMargin:'180px'}):null;
+window.NasherPlate.render=function(target,...args){if(observer&&target.classList.contains('card-art')){pending.set(target,args);target.style.aspectRatio='4.4';observer.observe(target);observed.add(target);queueMicrotask(()=>{for(const old of observed)if(!old.isConnected){observer.unobserve(old);observed.delete(old);pending.delete(old);}});return Promise.resolve();}return immediate(target,...args);};
+})();
 };
+// Defer only listing artwork outside the initial viewport. Preview and detail stay immediate.
+const immediate=window.NasherPlate.render,pending=new WeakMap(),observed=new Set();
+const observer=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){observer.unobserve(e.target);observed.delete(e.target);const args=pending.get(e.target);pending.delete(e.target);if(args)immediate(e.target,...args);}},{rootMargin:'180px'}):null;
+window.NasherPlate.render=function(target,...args){if(observer&&target.classList.contains('card-art')){pending.set(target,args);target.style.aspectRatio='4.4';observer.observe(target);observed.add(target);queueMicrotask(()=>{for(const old of observed)if(!old.isConnected){observer.unobserve(old);observed.delete(old);pending.delete(old);}});return Promise.resolve();}return immediate(target,...args);};
 })();

@@ -61,9 +61,9 @@ window.NasherBulk=(()=>{
   $('bulk-allowance').textContent=t('allowance')+' '+remaining;
   $('bulk-rows').replaceChildren();
   rows.forEach((row,index)=>{
-   const section=make('fieldset','', 'bulk-row'),legend=make('legend',t('row')+' '+(index+1));
+   const section=make('details','', 'bulk-row'),legend=make('summary',t('row')+' '+(index+1)+' · '+api.emirateName(row.emirate)+' '+row.code+' / '+(row.number||'—'));section.open=true;
    const grid=make('div','', 'bulk-grid'),preview=make('div','', 'bulk-preview');
-   const refreshPreview=()=>NasherPlate.render(preview,row.code,row.number||'12345',row.variant,row.emirate);
+   const refreshPreview=()=>{legend.textContent=t('row')+' '+(index+1)+' · '+api.emirateName(row.emirate)+' '+row.code+' / '+(row.number||'—');NasherPlate.render(preview,row.code,row.number||'12345',row.variant,row.emirate);};
    const emirates=[...new Set(api.codes.filter(c=>c.enabled).map(c=>c.emirate))];
    grid.append(select(t('emirate'),emirates.map(e=>[e,api.emirateName(e)]),row.emirate,value=>{
     row.emirate=value;row.code=api.codes.find(c=>c.emirate===value&&c.enabled)?.code||'';row.variant=1;changed();render();
@@ -79,7 +79,7 @@ window.NasherBulk=(()=>{
    if(!whatsapp)row.whatsapp=false;
    grid.append(neg.wrap,wa.wrap);
    const remove=make('button',t('remove'));remove.type='button';remove.onclick=()=>{rows.splice(index,1);changed();render();};
-   section.append(legend,grid,preview,remove);$('bulk-rows').append(section);refreshPreview();
+   const similar=make('button',api.language()==='ar'?'إضافة لوحة مشابهة':'Add similar plate');similar.type='button';similar.disabled=rows.length>=remaining;similar.onclick=()=>{if(rows.length>=remaining)return;rows.push({...row,number:''});changed();render();};section.append(legend,grid,preview,remove,similar);$('bulk-rows').append(section);refreshPreview();
   });
   $('bulk-add').disabled=busy||rows.length>=remaining;
   $('bulk-submit').disabled=busy||!rows.length;
@@ -87,7 +87,7 @@ window.NasherBulk=(()=>{
  function payload(){return rows.map(r=>({...r,variant:Number(r.variant),price:r.por?null:Number(r.price),por:!!r.por,negotiable:!r.por&&!!r.negotiable,whatsapp:whatsapp&&!!r.whatsapp}));}
  async function submit(event){
   event.preventDefault();if(busy||stopped)return;
-  if(!$('bulk-form').reportValidity()){message(t('invalid'));return;}
+  $('bulk-rows').querySelectorAll('details').forEach(d=>{if(d.querySelector(':invalid'))d.open=true;});if(!$('bulk-form').reportValidity()){message(t('invalid'));return;}
   const data=requestId&&requestPayload?JSON.parse(requestPayload):payload(),serialized=JSON.stringify(data);
   const identities=new Set(data.map(r=>[r.emirate,r.code,r.number].join('|')));
   if(identities.size!==data.length){message(t('duplicate'));return;}

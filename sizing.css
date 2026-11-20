@@ -1,0 +1,36 @@
+
+/* Step 13: one sizing contract for forms and action groups. */
+header,main,footer,.account-main{width:calc(100% - 64px);max-width:1200px;margin-inline:auto;padding-inline:20px}
+:root{--button-pad-y:.625rem;--button-pad-x:1rem;--control-height:2.75rem}
+body button,body summary,body a.post-link,body .market-nav a,body .card-actions a,body .contact-actions a,body #contact-actions a,body .mobile-nav a{box-sizing:border-box;padding:var(--button-pad-y) var(--button-pad-x);min-height:var(--control-height);line-height:1.35;font-size:.875rem;border-radius:.5rem;text-align:center;white-space:normal;display:inline-flex;align-items:center;justify-content:center;gap:.375rem;margin:0}
+body summary{cursor:pointer}body summary::marker{content:''}body summary::-webkit-details-marker{display:none}
+body .advanced-filters summary::after{content:'⌄';font-size:1em}
+body .advanced-filters[open] summary::after{transform:rotate(180deg)}
+body .filters>.actions{display:flex;gap:.5rem;flex:0 0 auto;align-items:stretch}
+body .filters>.actions button,body .advanced-filters>summary{width:7rem;min-height:var(--control-height);height:auto}
+body .filters>.actions button{flex:0 0 7rem}
+body .filters{align-items:end}body .advanced-filters{align-self:end}
+body .status-tabs,body .admin-tabs,body .share-actions,body .contact-actions,body .card-actions,body .account-card .actions{display:flex;flex-wrap:wrap;align-items:stretch;gap:.5rem}
+body .status-tabs>button,body .admin-tabs>button,body .share-actions>button,body .contact-actions>a,body .contact-actions>button,body .card-actions>button,body .card-actions>a,body .account-card .actions>button{flex:1 1 0;min-width:0}
+body .status-tabs{max-width:28rem}body .share-actions{max-width:28rem}body .card-actions{width:100%}
+body .market-nav{align-items:stretch;gap:.5rem}body .market-nav>a{min-width:7rem}
+body .code-grid>button{width:3.5rem;min-height:var(--control-height);padding:var(--button-pad-y) .5rem}
+body input:not([type=checkbox]):not([type=radio]),body select,body textarea{box-sizing:border-box;display:block;width:100%;max-width:100%;min-width:0;height:auto;min-height:var(--control-height);padding:.625rem .75rem;border:1px solid var(--line);border-radius:.5rem;background-color:var(--card);color:var(--ink);font-family:inherit;font-size:1rem;line-height:1.4}
+body input[type=checkbox],body input[type=radio]{width:1.125rem;height:1.125rem;min-height:0;flex:0 0 1.125rem;padding:0}
+body textarea{min-height:7rem;resize:vertical}body label,body fieldset,body form,body .bulk-grid>*,body .edit-shell>*{min-width:0}
+body .bulk-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}body .bulk-grid label{display:flex;flex-direction:column;align-items:stretch;gap:.375rem;font-size:.875rem}
+body .bulk-grid .choice,body .choice{display:flex;flex-direction:row;align-items:center;gap:.625rem}
+body .bulk-row>summary{width:100%;justify-content:start;text-align:start;font-size:1rem}body .bulk-row>button{min-width:10rem;margin-inline-end:.5rem;margin-top:.5rem}
+body .results-toolbar select{width:auto;min-width:9rem}body .results-toolbar label{max-width:100%}
+body .filters label,body .edit-grid label,body .admin-grid label,body .account-card label{font-size:.875rem}
+body header>.actions{position:static;grid-row:1;justify-self:end;align-items:center;flex-wrap:wrap;gap:.5rem}body header>.brand{grid-row:2;margin-top:0;justify-self:center}body header>.market-nav{grid-row:3}
+body header>.actions>button{min-width:6rem}body .text-size-tools{display:inline-flex;align-items:stretch;gap:0;border:1px solid var(--line);border-radius:.5rem;overflow:hidden;background:var(--card)}
+body .text-size-tools>button{border:0;border-radius:0;width:3rem;min-width:3rem;font-family:Arial,sans-serif;padding:.625rem .5rem}body .text-size-tools>button:first-child{font-size:.875rem}body .text-size-tools>button:last-child{font-size:1.125rem}
+body .text-scale-label{display:flex;align-items:center;justify-content:center;min-width:4rem;font-size:.75rem;direction:ltr}body .text-size-tools{direction:ltr}
+body .danger{margin-inline-start:0!important}body #new-code,body #ad-price,body #filter-min,body #filter-max,body .bulk-grid input{min-width:0}
+body h1,body .market-top h1,body .account-main h1{font-size:1.65rem}body h2{font-size:1.2rem}body .card-body h2{font-size:.875rem}body .meta,body .draft-note{font-size:.8125rem}
+@media(max-width:1100px){body .listing-grid,body .account-main .listing-grid{grid-template-columns:repeat(4,minmax(0,1fr))}body .bulk-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:850px){header,main,footer,.account-main{width:calc(100% - 32px);padding-inline:12px}body .listing-grid,body .account-main .listing-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){header,main,footer,.account-main{width:calc(100% - 24px);padding-inline:0}body .listing-grid,body .account-main .listing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body header>.actions{justify-self:center;justify-content:center}body header>.actions>button{min-width:0}body .filters>.actions{flex:2 1 0}body .filters>.actions button{width:auto;flex:1 1 0;min-width:0}body .advanced-filters{flex:1 1 0;min-width:0}body .advanced-filters>summary{width:100%}body .filters>label{flex:1 1 40%;min-width:0}body .filter-panel{width:auto;max-width:none}body .mobile-nav a{padding:.625rem .5rem;font-size:.8125rem}body .admin-tabs>button{flex-basis:40%}body .bulk-row>button{width:100%;margin-inline-end:0}body .text-size-tools>button{width:2.5rem;min-width:2.5rem}body .text-scale-label{min-width:3.5rem}}
+@media(max-width:420px){body .bulk-grid{grid-template-columns:1fr}body .filter-panel{gap:.75rem}body .contact-actions{flex-wrap:wrap}body .results-toolbar{gap:.5rem}}
+@media(max-width:359px){body .listing-grid,body .account-main .listing-grid{grid-template-columns:1fr}}

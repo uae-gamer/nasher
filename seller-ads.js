@@ -2,8 +2,8 @@
  let client,id,lang='ar',page=0,count=0,rows=[],generation=0,settings={},status='';
  const size=10,$=id=>document.getElementById(id);
  const words={
-  ar:{empty:'لا توجد إعلانات مطابقة.',error:'تعذر تحميل الإعلانات. أعد تحميل الصفحة للمحاولة.',loading:'جارٍ تحميل الإعلانات…',next:'التالي',previous:'السابق',abu_dhabi:'أبوظبي',dubai:'دبي',umm_al_quwain:'أم القيوين',fujairah:'الفجيرة',ras_al_khaimah:'رأس الخيمة',sharjah:'الشارقة',noCode:'بدون رمز',all:'الكل',available:'متاح',sold:'تم البيع',show:'عرض'},
-  en:{empty:'No matching ads.',error:'Could not load ads. Reload to retry.',loading:'Loading ads…',next:'Next',previous:'Previous',abu_dhabi:'Abu Dhabi',dubai:'Dubai',umm_al_quwain:'Umm Al Quwain',fujairah:'Fujairah',ras_al_khaimah:'Ras Al Khaimah',sharjah:'Sharjah',noCode:'No code',all:'All',available:'Available',sold:'Sold',show:'Show'}
+  ar:{empty:'لا توجد إعلانات مطابقة.',error:'تعذر تحميل الإعلانات. أعد تحميل الصفحة للمحاولة.',loading:'جارٍ تحميل الإعلانات…',next:'التالي',previous:'السابق',abu_dhabi:'أبوظبي',dubai:'دبي',umm_al_quwain:'أم القيوين',fujairah:'الفجيرة',ajman:'عجمان',ras_al_khaimah:'رأس الخيمة',sharjah:'الشارقة',noCode:'بدون رمز',all:'الكل',available:'متاح',sold:'تم البيع',show:'عرض'},
+  en:{empty:'No matching ads.',error:'Could not load ads. Reload to retry.',loading:'Loading ads…',next:'Next',previous:'Previous',abu_dhabi:'Abu Dhabi',dubai:'Dubai',umm_al_quwain:'Umm Al Quwain',fujairah:'Fujairah',ajman:'Ajman',ras_al_khaimah:'Ras Al Khaimah',sharjah:'Sharjah',noCode:'No code',all:'All',available:'Available',sold:'Sold',show:'Show'}
  };
  function node(tag,value,cls){const n=document.createElement(tag);n.textContent=value;if(cls)n.className=cls;return n;}
  function draw(){

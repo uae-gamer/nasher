@@ -1,6 +1,7 @@
-/* Nasher plate compositor. Original illustration files stay unchanged.
+/* Nasher plate compositor. Original illustration pixels are packed losslessly.
    SVG viewports reuse their digit artwork rather than approximating the font. */
 (function(){let serial=0;const NS='http://www.w3.org/2000/svg';
+const plateAtlases={"abu_dhabi":{"href":"assets/plates/abu_dhabi-atlas.png","width":1080,"height":756,"regions":{"assets/plates/variant1_ex1.png":[0,294,1080,248,0,1080,1080],"assets/plates/variant1_ex2.png":[0,294,1080,248,252,1080,1080],"assets/plates/variant2_ex1.png":[0,294,1080,248,504,1080,1080]}},"dubai":{"href":"assets/plates/dubai-atlas.png","width":720,"height":1246,"regions":{"assets/plates/dubai-1.png":[0,71,720,174,0,720,258],"assets/plates/dubai-2.png":[0,71,720,174,178,720,261],"assets/plates/dubai-3.png":[0,71,720,174,356,720,261],"assets/plates/dubai-4.png":[0,71,720,174,534,720,261],"assets/plates/dubai-5.png":[0,71,720,174,712,720,262],"assets/plates/dubai-6.png":[0,71,720,174,890,720,262],"assets/plates/dubai-7.png":[0,71,720,174,1068,720,258]}},"sharjah":{"href":"assets/plates/sharjah-atlas.png","width":720,"height":352,"regions":{"assets/plates/sharjah-1.png":[0,191,720,172,0,720,720],"assets/plates/sharjah-2.png":[0,191,720,172,176,720,720]}},"fujairah":{"href":"assets/plates/fujairah-atlas.png","width":1080,"height":2254,"regions":{"assets/plates/FUJ-BLK-1.png":[0,0,1080,250,0,1080,250],"assets/plates/FUJ-BLK-2.png":[0,0,1080,250,254,1080,250],"assets/plates/FUJ-BLK-3.png":[0,0,1080,250,508,1080,250],"assets/plates/FUJ-RED-1.png":[0,0,1080,250,762,1080,250],"assets/plates/FUJ-RED-2.png":[0,0,1080,250,1016,1080,250],"assets/plates/FUJ-RED-3.png":[0,0,1080,250,1270,1080,250],"assets/plates/dubai-1.png":[59,136,89,100,1524,720,258],"assets/plates/dubai-2.png":[73,136,58,100,1628,720,261],"assets/plates/dubai-3.png":[57,136,90,100,1732,720,261],"assets/plates/dubai-4.png":[50,136,103,100,1836,720,261],"assets/plates/dubai-5.png":[38,136,82,102,1940,720,262],"assets/plates/dubai-6.png":[32,136,87,100,2046,720,262],"assets/plates/dubai-7.png":[59,136,89,100,2150,720,258]}},"umm_al_quwain":{"href":"assets/plates/umm_al_quwain-atlas.png","width":1080,"height":1354,"regions":{"assets/plates/uaq-long.png":[0,0,1080,620,0,1080,620],"assets/plates/dubai-1.png":[59,136,89,100,624,720,258],"assets/plates/dubai-2.png":[73,136,58,100,728,720,261],"assets/plates/dubai-3.png":[57,136,90,100,832,720,261],"assets/plates/dubai-4.png":[50,136,103,100,936,720,261],"assets/plates/dubai-5.png":[38,136,82,102,1040,720,262],"assets/plates/dubai-6.png":[32,136,87,100,1146,720,262],"assets/plates/dubai-7.png":[59,136,89,100,1250,720,258]}},"ras_al_khaimah":{"href":"assets/plates/ras_al_khaimah-atlas.png","width":1080,"height":1354,"regions":{"assets/plates/rak-long.png":[0,0,1080,620,0,1080,620],"assets/plates/dubai-1.png":[59,136,89,100,624,720,258],"assets/plates/dubai-2.png":[73,136,58,100,728,720,261],"assets/plates/dubai-3.png":[57,136,90,100,832,720,261],"assets/plates/dubai-4.png":[50,136,103,100,936,720,261],"assets/plates/dubai-5.png":[38,136,82,102,1040,720,262],"assets/plates/dubai-6.png":[32,136,87,100,1146,720,262],"assets/plates/dubai-7.png":[59,136,89,100,1250,720,258]}},"ajman":{"href":"assets/plates/ajman-atlas.png","width":1080,"height":2040,"regions":{"assets/plates/ajm-1.png":[0,294,1080,258,0,1080,1080],"assets/plates/ajm-2.png":[0,294,1080,258,262,1080,1080],"assets/plates/ajm-3.png":[0,294,1080,258,524,1080,1080],"assets/plates/ajm-4.png":[0,294,1080,258,786,1080,1080],"assets/plates/ajm-5.png":[0,294,1080,258,1048,1080,1080],"assets/plates/dubai-1.png":[59,136,89,100,1310,720,258],"assets/plates/dubai-2.png":[73,136,58,100,1414,720,261],"assets/plates/dubai-3.png":[57,136,90,100,1518,720,261],"assets/plates/dubai-4.png":[50,136,103,100,1622,720,261],"assets/plates/dubai-5.png":[38,136,82,102,1726,720,262],"assets/plates/dubai-6.png":[32,136,87,100,1832,720,262],"assets/plates/dubai-7.png":[59,136,89,100,1936,720,258]}}};
 function node(tag,attrs={},text){const n=document.createElementNS(NS,tag);for(const [k,v]of Object.entries(attrs))n.setAttribute(k,String(v));if(text!==undefined)n.textContent=text;return n}
 const boxes=[[473,330,91,169],[587,330,102,169],[698,330,105,169],[807,330,106,169],[925,330,113,169]];
 function glyph(d,x,y,w,h,filter){const i='1234567890'.indexOf(d),box=d==='6'?[469,330,106,169]:boxes[i%5];const g=node('svg',{x,y,width:w,height:h,viewBox:box.join(' '),preserveAspectRatio:'none'});const im=node('image',{href:'assets/plates/variant1_ex'+(i<5?'1':'2')+'.png',width:1080,height:1080});if(filter)im.setAttribute('filter',filter);g.append(im);return g}
@@ -130,7 +131,24 @@ function atlasPlate(target, code, number, variant, style) {
  Array.from(number).forEach((digit,i)=>region('1234567890'.indexOf(digit)*85,435,85,182,start+i*85,30));
  target.replaceChildren(svg);
 }
-window.NasherPlate={render(target,code,number,variant=1,emirate="abu_dhabi"){code=String(code);number=String(number);if(Object.hasOwn(longPlateStyles,emirate)){atlasPlate(target,code,number,variant,longPlateStyles[emirate]);return;}if(emirate==="fujairah"){fujairah(target,code,number,variant);return;}if(emirate==="sharjah"){sharjah(target,code,number,variant);return;}if(emirate==="dubai"){dubai(target,code,number,variant);return;}if(!/^[1-9][0-9]*$/.test(code)||code.length>10||!/^[1-9][0-9]{0,4}$/.test(number)||![1,2].includes(Number(variant))){target.replaceChildren();return}variant=Number(variant);const white='whiteCode'+(++serial),svg=node('svg',{viewBox:'0 0 1080 240',role:'img','aria-label':'Abu Dhabi '+code+' / '+number,class:'generated-plate'});svg.append(node('title',{},'Abu Dhabi — '+code+' / '+number));const defs=node('defs');const f=node('filter',{id:white,'color-interpolation-filters':'sRGB',x:'-2%',y:'-2%',width:'104%',height:'104%'});f.append(node('feColorMatrix',{type:'matrix',values:'0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1.1 -1.1 -1.1 0 2.8'}));defs.append(f);svg.append(defs);
+// Ajman: sampled supplied A/B/K/H/D artwork; remaining letters use Dubai relief.
+function ajman(target,code,number,variant){
+ if(!/^[A-Z]$/.test(code)||!/^[1-9][0-9]{0,4}$/.test(number)||Number(variant)!==1){target.replaceChildren();return;}
+ const svg=node('svg',{viewBox:'0 0 1080 250',role:'img','aria-label':'Ajman '+code+' / '+number,class:'generated-plate'});
+ function sample(file,box,x,y,width=box[2],height=box[3]){
+  const g=node('svg',{x,y,width,height,viewBox:box.join(' '),preserveAspectRatio:'none'});
+  g.append(node('image',{href:'assets/plates/ajm-'+file+'.png',width:1080,height:1080}));return g;
+ }
+ svg.append(sample(1,[0,298,1080,250],0,0));
+ svg.append(node('rect',{x:52,y:30,width:665,height:180,fill:'#d9dde6'}));
+ const refs={A:1,B:2,K:3,H:4,D:5};
+ if(refs[code])svg.append(sample(refs[code],[55,338,115,158],55,40));
+ else {const g=node('g',{transform:'translate(112 119) scale(1.55 2.20) translate(-102 -109)'});drawDubaiCode(g,code);svg.append(g);}
+ const cell=104,start=190+(5-number.length)*cell/2;
+ [...number].forEach((d,i)=>{const k='1234567890'.indexOf(d);svg.append(sample(k<5?1:2,[190+(k%5)*104,330,104,170],start+i*cell,32));});
+ target.replaceChildren(svg);
+}
+window.NasherPlate={render(target,code,number,variant=1,emirate="abu_dhabi"){code=String(code);number=String(number);if(emirate==="ajman"){ajman(target,code,number,variant);return;}if(!plateAtlases[emirate]){target.replaceChildren();return;}if(Object.hasOwn(longPlateStyles,emirate)){atlasPlate(target,code,number,variant,longPlateStyles[emirate]);return;}if(emirate==="fujairah"){fujairah(target,code,number,variant);return;}if(emirate==="sharjah"){sharjah(target,code,number,variant);return;}if(emirate==="dubai"){dubai(target,code,number,variant);return;}if(!/^[1-9][0-9]*$/.test(code)||code.length>10||!/^[1-9][0-9]{0,4}$/.test(number)||![1,2].includes(Number(variant))){target.replaceChildren();return}variant=Number(variant);const white='whiteCode'+(++serial),svg=node('svg',{viewBox:'0 0 1080 240',role:'img','aria-label':'Abu Dhabi '+code+' / '+number,class:'generated-plate'});svg.append(node('title',{},'Abu Dhabi — '+code+' / '+number));const defs=node('defs');const f=node('filter',{id:white,'color-interpolation-filters':'sRGB',x:'-2%',y:'-2%',width:'104%',height:'104%'});f.append(node('feColorMatrix',{type:'matrix',values:'0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1.1 -1.1 -1.1 0 2.8'}));defs.append(f);svg.append(defs);
 const base=node('svg',{viewBox:'0 298 1080 240',x:0,y:0,width:1080,height:240});base.append(node('image',{href:`assets/plates/variant${variant}_ex1.png`,width:1080,height:1080}));svg.append(base);
 svg.append(node('rect',{x:465,y:28,width:578,height:179,fill:'#d9dde6'}));
 const digitW=96,gap=16,total=number.length*digitW+(number.length-1)*gap,start=465+(578-total)/2;
@@ -143,12 +161,22 @@ target.replaceChildren(svg);
 // Source assets remain public web resources; this is presentation, not access control.
 const compose=window.NasherPlate.render,requests=new WeakMap(),assets=new Map(),finished=new Map();let cacheBytes=0;
 function remember(key,src){if(src.length>1600000)return;if(finished.has(key))cacheBytes-=finished.get(key).length;finished.delete(key);finished.set(key,src);cacheBytes+=src.length;while(cacheBytes>12000000||finished.size>40){const first=finished.keys().next().value;cacheBytes-=finished.get(first).length;finished.delete(first)}}
-function embeddedAsset(href){
- if(!assets.has(href)){
-  const pending=fetch(href).then(response=>{if(!response.ok)throw new Error('Plate asset unavailable');return response.blob()}).then(blob=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('Plate asset unreadable'));reader.readAsDataURL(blob)})).catch(error=>{assets.delete(href);throw error});
-  assets.set(href,pending);
+// Fetch one atlas per emirate. Reconstruct source-coordinate tiles in memory so
+// existing SVG sampling retains identical dimensions and interpolation.
+const decodedAtlases=new Map();
+function atlasImage(href){if(!decodedAtlases.has(href))decodedAtlases.set(href,fetch(href).then(r=>{if(!r.ok)throw new Error('Plate atlas unavailable');return r.blob()}).then(blob=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob)})).then(decodeImage).catch(e=>{decodedAtlases.delete(href);throw e}));return decodedAtlases.get(href);}
+function embeddedAsset(href,emirate){
+ const key=emirate+':'+href;
+ if(!assets.has(key)){
+  const atlas=plateAtlases[emirate],r=atlas?.regions[href];
+  if(!r)return Promise.reject(new Error('Unknown plate tile'));
+  assets.set(key,atlasImage(atlas.href).then(img=>{const [x,y,w,h,top,originalWidth,originalHeight]=r;
+   const canvas=document.createElement('canvas');canvas.width=originalWidth;canvas.height=originalHeight;
+   const context=canvas.getContext('2d');if(!context)throw new Error('Canvas unavailable');
+   context.drawImage(img,0,top,w,h,x,y,w,h);return canvas.toDataURL('image/png');
+  }).catch(e=>{assets.delete(key);throw e}));
  }
- return assets.get(href);
+ return assets.get(key);
 }
 function decodeImage(source){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('Plate rendering failed'));img.src=source})}
 window.NasherPlate.render=function(target,code,number,variant=1,emirate='abu_dhabi'){
@@ -157,12 +185,12 @@ window.NasherPlate.render=function(target,code,number,variant=1,emirate='abu_dha
  const svg=scratch.firstElementChild;target.replaceChildren();
  if(!svg){target.removeAttribute('aria-busy');return Promise.resolve()}
  const label=svg.getAttribute('aria-label');
- const width=['abu_dhabi','fujairah','umm_al_quwain','ras_al_khaimah'].includes(emirate)?1080:720,height=['umm_al_quwain','fujairah','ras_al_khaimah'].includes(emirate)?250:emirate==='sharjah'?164:emirate==='dubai'?166:240;
+ const width=['ajman','abu_dhabi','fujairah','umm_al_quwain','ras_al_khaimah'].includes(emirate)?1080:720,height=['ajman','umm_al_quwain','fujairah','ras_al_khaimah'].includes(emirate)?250:emirate==='sharjah'?164:emirate==='dubai'?166:240;
  if(finished.has(key)){const output=new Image();output.src=finished.get(key);output.className='generated-plate';output.alt=label;output.width=width*2;output.height=height*2;target.replaceChildren(output);target.removeAttribute('aria-busy');return Promise.resolve();}
  const placeholder=document.createElement('div');placeholder.style.aspectRatio=width+'/'+height;placeholder.setAttribute('aria-label',label);target.append(placeholder);target.setAttribute('aria-busy','true');
  return (async()=>{
   try{
-   await Promise.all([...svg.querySelectorAll('image')].map(async image=>image.setAttribute('href',await embeddedAsset(image.getAttribute('href')))));
+   await Promise.all([...svg.querySelectorAll('image')].map(async image=>image.setAttribute('href',await embeddedAsset(image.getAttribute('href'),emirate))));
    if(requests.get(target)!==request)return;
    svg.setAttribute('width',width);svg.setAttribute('height',height);
    const serialized=new XMLSerializer().serializeToString(svg);
@@ -180,10 +208,7 @@ window.NasherPlate.render=function(target,code,number,variant=1,emirate='abu_dha
    if(requests.get(target)!==request)return;
    const message=document.createElement('p');message.textContent=document.documentElement.lang==='ar'?'تعذر عرض رسم اللوحة. أعد تحميل الصفحة للمحاولة.':'Could not render the plate. Reload the page to retry.';message.setAttribute('role','status');target.replaceChildren(message);
   }finally{if(requests.get(target)===request)target.removeAttribute('aria-busy')}
- // Defer only listing artwork outside the initial viewport. Preview and detail stay immediate.
-const immediate=window.NasherPlate.render,pending=new WeakMap(),observed=new Set();
-const observer=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){observer.unobserve(e.target);observed.delete(e.target);const args=pending.get(e.target);pending.delete(e.target);if(args)immediate(e.target,...args);}},{rootMargin:'180px'}):null;
-window.NasherPlate.render=function(target,...args){if(observer&&target.classList.contains('card-art')){pending.set(target,args);target.style.aspectRatio='4.4';observer.observe(target);observed.add(target);queueMicrotask(()=>{for(const old of observed)if(!old.isConnected){observer.unobserve(old);observed.delete(old);pending.delete(old);}});return Promise.resolve();}return immediate(target,...args);};
+
 })();
 };
 // Defer only listing artwork outside the initial viewport. Preview and detail stay immediate.

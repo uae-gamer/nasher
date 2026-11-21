@@ -103,8 +103,8 @@ window.NasherBulk=(()=>{
    const count=result.data.length;
    rows=[];requestId=null;requestPayload=null;
    try{localStorage.removeItem(draftKey);}catch{}
-   const totals=await api.db.from('nasher_ads').select('id',{head:true,count:'exact'}).eq('seller_id',api.user.id).eq('status','active').gt('expires_at',new Date().toISOString());
-   remaining=totals.error?Math.max(0,remaining-count):Math.max(0,api.settings.max_active_ads-(totals.count||0));
+   const totals=await api.db.rpc('nasher_remaining_slots',{p_module:'plates'});
+   remaining=totals.error?Math.max(0,remaining-count):Math.max(0,totals.data||0);
    message(t('success')+' '+count);
    const link=make('a',api.language()==='ar'?' إعلاناتي':' My ads');link.href='my-ads.html';$('bulk-message').append(link);
   }catch(error){
@@ -123,13 +123,13 @@ window.NasherBulk=(()=>{
   const [profile,contact,ads]=await Promise.all([
    api.db.from('nasher_profiles').select('published').eq('id',api.user.id).single(),
    api.db.from('nasher_seller_contacts').select('call_number,whatsapp_number').eq('user_id',api.user.id).single(),
-   api.db.from('nasher_ads').select('id',{head:true,count:'exact'}).eq('seller_id',api.user.id).eq('status','active').gt('expires_at',new Date().toISOString())
+   api.db.rpc('nasher_remaining_slots',{p_module:'plates'})
   ]);
   if(stopped)return;
   if(profile.error||contact.error||ads.error)throw profile.error||contact.error||ads.error;
   $('bulk-page').hidden=false;
   if(!profile.data.published||!contact.data.call_number){message(t('profile'));$('bulk-controls').disabled=true;return;}
-  remaining=Math.max(0,api.settings.max_active_ads-(ads.count||0));whatsapp=!!contact.data.whatsapp_number;
+  remaining=Math.max(0,ads.data||0);whatsapp=!!contact.data.whatsapp_number;
   loadDraft();if(!rows.length&&remaining)rows=[blank()];
   $('bulk-form').onsubmit=submit;
   $('bulk-add').onclick=()=>{if(rows.length<remaining){rows.push(blank());changed();render();}};

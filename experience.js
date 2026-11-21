@@ -130,11 +130,10 @@ window.NasherExperience = (() => {
   const seller=context.isAdmin()?get('seller-id').value.trim():'';
   if(seller&&!/^[0-9a-f-]{36}$/i.test(seller)){allowance=null;renderAllowance();return;}
   try {
-   const result=await context.client().from('nasher_ads').select('id',{head:true,count:'exact'})
-    .eq('seller_id',seller||context.user().id).eq('status','active').gt('expires_at',new Date().toISOString());
+   const result=await context.client().rpc('nasher_allowance',{p_seller:seller||null,p_module:'plates'});
    if(result.error)throw result.error;
    if(request!==allowanceRequest)return;
-   allowance={active:result.count||0,max:context.settings().max_active_ads};
+   allowance=result.data;
   } catch {
    if(request!==allowanceRequest)return;
    allowance=false;
@@ -144,12 +143,12 @@ window.NasherExperience = (() => {
  function renderAllowance() {
   const target=get('post-allowance');if(!target)return;
   target.textContent=allowance===false?label('allowanceFailed'):allowance?
-   label('allowance')+' '+allowance.active+' / '+allowance.max+' · '+label('remaining')+' '+Math.max(0,allowance.max-allowance.active):'';
+   label('allowance')+' '+allowance.active+' / '+allowance.max+' · '+label('remaining')+' '+(allowance.remaining??Math.max(0,allowance.max-allowance.active)):'';
  }
  function recordError(error) {
   // Store only bounded codes and known filenames, never raw error messages or URLs.
   const page=location.pathname.split('/').pop()||'index.html';
-  if(!['index.html','post.html','ad.html','my-ads.html','admin.html','bulk.html'].includes(page))return;
+  if(!['index.html','plates.html','post.html','ad.html','my-ads.html','admin.html','bulk.html'].includes(page))return;
   const code=String(error?.message||'').match(/NASHER_[A-Z_]+/)?.[0] ||
    (/^[A-Z0-9]{2,12}$/.test(String(error?.code||''))?String(error.code):'REQUEST_FAILED');
   try {

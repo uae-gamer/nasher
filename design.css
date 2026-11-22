@@ -1,0 +1,78 @@
+/* Nasher 18: shared compact interface tokens and controls. Loaded last. */
+:root{--bg:#f0f5fa;--card:#fff;--ink:#142b40;--muted:#526579;--line:#cbd8e4;--accent:#006c60;--soft:#e3f3ef;--danger:#b42335;--danger-soft:#fff0f2;--warning:#8a5100;--warning-soft:#fff3d6;--focus:#1677d2;--radius:12px;--control:40px}
+html[data-theme=dark] body,body.dark{--bg:#101b2b;--card:#192a3e;--ink:#f0f6ff;--muted:#b4c7dc;--line:#3b526b;--accent:#63dec5;--soft:#163e3d;--danger:#ffb6be;--danger-soft:#482432;--warning:#ffd187;--warning-soft:#493a22;--focus:#8bc6ff}
+body{background:var(--bg);color:var(--ink);line-height:1.5;font-size:.9375rem}
+body header,body main,body footer{width:calc(100% - 48px);max-width:1140px;padding-inline:0}
+body header{padding-block:18px 14px;gap:12px;border-color:var(--line)}
+body main{padding-block:20px 28px;min-width:0}body footer{padding-block:16px;gap:12px}
+body header .brand{justify-content:center;gap:9px}body header .brand strong{font-size:2rem}body header .brand>span{font-size:.7rem}
+body h1{font-size:clamp(1.45rem,3vw,2.15rem);line-height:1.25;letter-spacing:-.025em;margin:0 0 12px}
+body h2{font-size:1.125rem;line-height:1.35;margin:0 0 10px}body h3{font-size:1rem;margin:0 0 8px}
+body p{margin:8px 0;color:var(--muted)}body label{font-size:.875rem;line-height:1.45}
+body button,body .ui-button,body summary{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:var(--control);padding:9px 14px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);font:inherit;font-size:.875rem;font-weight:600;line-height:1.35;text-align:center;text-decoration:none;white-space:normal;cursor:pointer;transition:background .15s,border-color .15s,box-shadow .15s}
+body button:hover,body .ui-button:hover,body summary:hover{background:var(--soft);border-color:var(--accent);text-decoration:none}
+body :is(button,a,input,select,textarea,summary):focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+body button:disabled,body [aria-disabled=true]{opacity:.5;cursor:not-allowed;box-shadow:none}
+body :is(button,.ui-button).primary,body :is(button,.ui-button)[data-tone=primary]{background:#006c60;border-color:#006c60;color:#fff}
+body :is(button,.ui-button).primary:hover,body :is(button,.ui-button)[data-tone=primary]:hover{background:#00554d;border-color:#00554d}
+body :is(button,.ui-button)[data-tone=danger]{color:var(--danger);background:var(--danger-soft);border-color:var(--danger)}
+body :is(button,.ui-button)[data-tone=warning]{color:var(--warning);background:var(--warning-soft);border-color:var(--warning)}
+body :is(button,.ui-button)[aria-pressed=true],body .ui-button[aria-current=page]{background:var(--soft);border-color:var(--accent);color:var(--accent)}
+body input:not([type=checkbox]):not([type=radio]),body select,body textarea{box-sizing:border-box;width:100%;min-width:0;max-width:100%;height:auto;min-height:var(--control);padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);font:inherit;font-size:.9375rem;line-height:1.4}
+body textarea{min-height:110px;resize:vertical}body input[type=checkbox],body input[type=radio]{width:18px!important;height:18px;min-height:18px;flex-shrink:0;accent-color:#007f70}
+body input:disabled,body select:disabled{opacity:.65;background:var(--bg)}body input:read-only{background:var(--bg)}
+body .market-nav,body .market-tabs,body .actions,body .status-tabs,body .admin-tabs{gap:8px;align-items:center}
+body header .market-nav .ui-button{padding:8px 14px;min-width:90px}
+body .market-controls,body .market-form,body .edit-grid,body .admin-grid{gap:12px;margin:12px 0;align-items:start}
+body .market-controls{padding:14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);align-items:end}
+body .market-controls>button{width:100%}body .market-form label,body .market-controls label{gap:5px}
+body .market-form{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}
+body .market-form .choice{padding:8px 0}body .market-form>button[type=submit]{grid-column:1/-1;width:100%;max-width:360px;justify-self:end}
+body .market-form .wide{min-width:0}body .market-photo-choice{flex-direction:row;flex-wrap:wrap}
+body .account-card,body .admin-panel,body .market-review,body .live-preview,body .detail-body{padding:18px;border-radius:var(--radius);border-color:var(--line)}
+body .market-review{background:var(--card)}body .market-review .market-form{padding:0;border:0;margin:10px 0}
+body .hub-intro{padding:18px 22px;border:1px solid var(--line);border-inline-start:5px solid #008a79;border-radius:var(--radius);background:linear-gradient(115deg,var(--card),var(--soft));margin-bottom:14px}
+body .hub-intro h1{max-width:none}body .hub-intro p{max-width:65ch;margin-bottom:0}
+body .module-grid{gap:12px;margin:14px 0 22px}body .module-card{padding:18px;border-radius:var(--radius);border-top:4px solid #008a79;box-shadow:0 3px 12px #142b4008;min-height:100px;gap:5px}
+body .module-card:nth-child(2){border-top-color:#7a50d7}body .module-card:nth-child(3){border-top-color:#1677d2}
+body .module-card strong{font-size:1.125rem}body .module-card small{font-size:.8125rem;color:var(--muted)}body .module-symbol{color:var(--accent);font-size:1.6rem}
+body .module-card:nth-child(2) .module-symbol{color:#9a72ed}body .module-card:nth-child(3) .module-symbol{color:#388de3}
+body .section-heading{margin:20px 0 10px;gap:10px}body .section-heading h2{margin:0}
+body .listing-grid{gap:12px;align-items:stretch}body .listing-card{min-width:0;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:0 2px 6px #142b4007;overflow:hidden}
+body .card-body{padding:10px;gap:6px;display:flex;flex-direction:column;justify-content:flex-start}
+body .card-body h2{font-size:.9375rem;line-height:1.35;margin:0;overflow-wrap:anywhere}
+body .card-body h2 .ui-button{width:100%;min-height:36px;padding:6px 8px;font-size:inherit;font-weight:600;background:var(--soft);border-color:transparent}
+body .card-body .price{font-size:1.0625rem;min-height:0;margin:2px 0;line-height:1.4;overflow-wrap:anywhere}
+body .card-body .meta{margin:0;padding-top:3px;font-size:.75rem}body .card-body .tags{min-height:0;margin:0}
+body .card-art,body .number-art,body .vehicle-art,body .detail-art,body .bulk-preview,body #plate-preview{background:#fff!important;min-width:0;max-width:100%}
+body .card-art{padding:10px 7px}body .card-art img,body .card-art svg{max-width:100%;height:auto;object-fit:contain}
+body .number-art{padding:12px 6px;min-height:74px;gap:3px}body .number-art strong{font-size:clamp(.875rem,1.65vw,1.4rem)}
+body .vehicle-art img{display:block}body .module-badge{font-size:.75rem;font-weight:600;color:var(--accent)}
+body .tag{font-size:.75rem;padding:3px 7px;border-radius:6px}body .market-actions,body .card-actions{gap:6px;margin-top:6px;display:flex;flex-wrap:wrap}
+body .market-actions>*,body .card-actions>*{flex:1 1 80px;min-width:0;min-height:38px;padding:8px;font-size:.8125rem}
+body .market-detail{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}
+body .market-detail .vehicle-art{max-height:460px;aspect-ratio:16/9}body .market-detail .vehicle-art img{object-fit:contain}
+body .market-facts{gap:10px;margin:14px 0}body .market-facts div{padding:8px 0}body .market-gallery{gap:10px}
+body .market-description{line-height:1.6}body .market-message,body .notice{padding:10px 12px;border-radius:9px;margin:10px 0}
+body .pager{gap:12px;margin-top:18px}body .pager button{min-width:90px}body .text-size-tools{border-radius:9px;overflow:hidden}
+body header .actions>button,body header .text-size-tools{height:40px;min-height:40px}body .text-size-tools>button{min-height:0;height:100%;padding:6px 10px}
+body .contact-icon{border-radius:10px}body .contact-icon.call-icon{background:#e8f7ee!important;color:#117237!important}body .contact-icon.whatsapp-icon{background:#e2f8e9!important;color:#12863d!important}
+body .filters>button,body .advanced-filters>summary{min-height:40px;padding:9px 14px}
+@media(min-width:1000px){body .listing-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:700px){
+ :root{--control:44px}body header,body main,body footer{width:calc(100% - 24px)}body header{padding-block:12px}body main{padding-top:14px}body h1{font-size:1.35rem}
+ body input:not([type=checkbox]):not([type=radio]),body select,body textarea{font-size:max(16px,1rem)!important}
+ body .module-grid{gap:8px;margin-block:12px 18px}body .module-card{padding:12px;min-height:80px}body .hub-intro{padding:14px}
+ body .market-controls,body .market-form{padding:12px;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+ body .market-admin .market-form{grid-template-columns:1fr}body .market-form>button[type=submit]{max-width:none}
+ body .listing-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body .card-body{padding:8px;gap:5px}body .card-body h2{font-size:.875rem}
+ body .card-body h2 .ui-button{font-size:.8125rem;min-height:40px}body .card-body .price{font-size:.9375rem}
+ body .card-art{padding:9px 5px}body .market-actions>*,body .card-actions>*{min-height:44px;font-size:.8125rem}
+ body .market-detail,body .account-card,body .admin-panel,body .market-review{padding:12px}body .market-tabs .ui-button{flex:1 1 auto;padding:8px 10px}
+ body .mobile-nav{background:var(--card);border-top:1px solid var(--line)}body .mobile-nav>a,body .mobile-nav>button{border:0;min-height:54px;padding:5px 2px}
+ body .mobile-sheet .actions>button{height:44px;min-height:44px}body .mobile-sheet .text-size-tools{height:44px}
+ body .section-heading>.ui-button{flex-shrink:0}body .market-detail .number-art strong{font-size:1.3rem}
+}
+@media(prefers-reduced-motion:reduce){body button,body .ui-button,body summary{transition:none}}
+
+body a:has(.card-art),body a:has(.number-art),body a:has(.vehicle-art){text-decoration:none;color:inherit}

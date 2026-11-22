@@ -8,8 +8,8 @@ function translate(){ $$('[data-en]').forEach(n=>n.textContent=ar()?n.dataset.ar
 function tabs(select){if(!select)return;const bar=el('div','status-tabs');bar.role='group';bar.setAttribute('aria-label',t('Ad status','حالة الإعلان'));select.parentElement.after(bar);select.parentElement.hidden=true;const sync=()=>{[...bar.children].forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tabValue===select.value)))};
 [...select.options].forEach((o,i)=>{const b=button(o.text,o.text,()=>{select.value=o.value;select.dispatchEvent(new Event('change',{bubbles:true}));if(select.form)select.form.requestSubmit();sync()});b.dataset.tabValue=o.value;b.dataset.select=select.id;b.dataset.index=i;bar.append(b)});select.addEventListener('change',sync);new MutationObserver(()=>{translate();sync()}).observe(select,{subtree:true,childList:true,characterData:true});window.addEventListener('nasher:results',sync);sync();return bar;}
 // Reader preference uses rem scaling and persists on this browser.
-const scaleSteps=[100,112.5,125,137.5,150];let scaleIndex=0;
-try{const saved=Number(localStorage.getItem('nasher.textScale'));scaleIndex=Math.max(0,scaleSteps.indexOf(saved));}catch{}
+const scaleSteps=[75,87.5,100,112.5,125,137.5,150];let scaleIndex=2;
+try{const saved=Number(localStorage.getItem('nasher.textScale'));scaleIndex=scaleSteps.includes(saved)?scaleSteps.indexOf(saved):2;}catch{}
 const textTools=el('div','text-size-tools');textTools.setAttribute('role','group');
 const smaller=button('A−','A−',()=>setTextScale(scaleIndex-1));const larger=button('A+','A+',()=>setTextScale(scaleIndex+1));const scaleLabel=el('output','text-scale-label');scaleLabel.setAttribute('aria-live','polite');
 function labelTextTools(){textTools.setAttribute('aria-label',t('Text size','حجم النص'));smaller.setAttribute('aria-label',t('Decrease text size','تصغير النص'));larger.setAttribute('aria-label',t('Increase text size','تكبير النص'));smaller.title=smaller.getAttribute('aria-label');larger.title=larger.getAttribute('aria-label');}
